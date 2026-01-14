@@ -19,18 +19,43 @@ export function SEO({
   const { i18n } = useTranslation();
   const currentLang = i18n.language;
 
-  const siteTitle = "GeoForge";
+
+  const siteTitle = "GeoForge - Online GeoJSON, WKT Editor & Converter";
   const finalTitle = title ? `${title} | ${siteTitle}` : siteTitle;
+
   const defaultDescription =
-    "A modern, high-performance web application for creating, editing, analyzing, and visualizing geospatial data. Supports GeoJSON, WKT, and more.";
+    "Free online geospatial tool. Convert GeoJSON to WKT, WKT to GeoJSON, and Shapefile to GeoJSON. Visualize, analyze, and edit map data with OpenLayers & Turf.js. Supports KML export and coordinate projection.";
+
   const finalDescription = description || defaultDescription;
+
+
+  const defaultKeywords =
+    "GeoJSON Editor, WKT Visualizer, Shapefile Viewer, KML, OpenLayers, Turf.js, GIS Tool, Spatial Analysis, Hex Grid, Voronoi, Map Projection, EPSG:4326, GeoForge";
+
+  const finalKeywords = keywords || defaultKeywords;
+
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "GeoForge",
+    applicationCategory: "GeospatialTool",
+    operatingSystem: "Web Browser",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+    },
+    description: finalDescription,
+    featureList:
+      "Convert GeoJSON to WKT, Convert WKT to GeoJSON, View Shapefile, Edit Geospatial Data, Spatial Analysis",
+  };
 
   return (
     <Helmet prioritizeSeoTags>
       <html lang={currentLang} />
       <title>{finalTitle}</title>
       <meta name="description" content={finalDescription} />
-      {keywords && <meta name="keywords" content={keywords} />}
+      <meta name="keywords" content={finalKeywords} />
 
       {/* Canonical */}
       <link rel="canonical" href={url} />
@@ -41,6 +66,7 @@ export function SEO({
       <meta property="og:title" content={finalTitle} />
       <meta property="og:description" content={finalDescription} />
       <meta property="og:image" content={image} />
+      <meta property="og:site_name" content="GeoForge" />
 
       {/* Twitter */}
       <meta property="twitter:card" content="summary_large_image" />
@@ -49,17 +75,16 @@ export function SEO({
       <meta property="twitter:description" content={finalDescription} />
       <meta property="twitter:image" content={image} />
 
-      {/* Alternate Languages - Hreflang */}
-      {/* Ideally, we should list all supported routes for each language here if they had unique URLs. 
-          Since this is an SPA on a single URL, simply declaring the lang attribute on html tag is the most critical step. 
-          But for crawlers that support fragment-based crawling or if we had separate paths:
-      */}
+      {/* JSON-LD Script */}
+      <script type="application/ld+json">{JSON.stringify(schemaData)}</script>
+
       <link rel="alternate" hrefLang="en" href="https://www.geo-forge.org/" />
       <link rel="alternate" hrefLang="zh" href="https://www.geo-forge.org/" />
       <link rel="alternate" hrefLang="ja" href="https://www.geo-forge.org/" />
       <link rel="alternate" hrefLang="ko" href="https://www.geo-forge.org/" />
       <link rel="alternate" hrefLang="fr" href="https://www.geo-forge.org/" />
       <link rel="alternate" hrefLang="es" href="https://www.geo-forge.org/" />
+      {/* ...其他语言保持不变... */}
       <link
         rel="alternate"
         hrefLang="x-default"
