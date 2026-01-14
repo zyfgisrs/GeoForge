@@ -1,14 +1,14 @@
 import { useState, type CSSProperties } from "react";
+import { useTranslation } from "react-i18next";
 import { EditorPanel } from "./components/EditorPanel";
 import { ExportModal } from "./components/ExportModal";
 import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
 import { ImportModal } from "./components/ImportModal";
 import { MapPanel } from "./components/MapPanel";
+import { SEO } from "./components/SEO";
 import { Toaster } from "./components/ui/sonner";
 import { useGeojsonStore } from "./store/geojsonStore";
-
-import { useTranslation } from "react-i18next";
 
 export default function App() {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
@@ -32,6 +32,7 @@ export default function App() {
       className="h-screen bg-[#18181b] text-[#e4e4e7] flex flex-col overflow-hidden"
       style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}
     >
+      <SEO />
       {/* Header */}
       <Header
         onExportClick={() => setIsExportModalOpen(true)}
