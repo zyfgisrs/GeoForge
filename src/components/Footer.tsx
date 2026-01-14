@@ -1,6 +1,7 @@
 import { ChevronDown, Crosshair, Globe } from "lucide-react";
 import GeoJSON from "ol/format/GeoJSON";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useGeojsonStore } from "../store/geojsonStore";
 
 interface FooterProps {
@@ -12,8 +13,10 @@ export function Footer({
   selectedProjection,
   onProjectionChange,
 }: FooterProps) {
+  const { t } = useTranslation();
   const [showProjectionMenu, setShowProjectionMenu] = useState(false);
   const geojsonText = useGeojsonStore((state) => state.geojsonText);
+  const cursorLocation = useGeojsonStore((state) => state.cursorLocation);
 
   const featureCount = useMemo(() => {
     if (!geojsonText.trim()) return 0;
@@ -45,7 +48,9 @@ export function Footer({
       {/* Left side - Feature count */}
       <div className="flex items-center gap-2">
         <div className="w-2 h-2 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
-        <span className="text-[#a1a1aa]">{featureCount} Features</span>
+        <span className="text-[#a1a1aa]">
+          {t("footerUI.featuresCount", { count: featureCount })}
+        </span>
       </div>
 
       {/* Right side - Coordinates and Projection */}
@@ -53,8 +58,17 @@ export function Footer({
         {/* Coordinates */}
         <div className="flex items-center gap-2 pr-4 border-r border-[#27272a]">
           <Crosshair className="w-3 h-3 text-[#a1a1aa]" />
-          <span className="text-[#a1a1aa]">
-            Lat: 37.774900, Lng: -122.419400
+          <span className="text-[#a1a1aa] min-w-[200px] text-right">
+            {cursorLocation
+              ? selectedProjection === "EPSG:4326" ||
+                selectedProjection === "EPSG:4269"
+                ? `${t("footer_lbl_lat")}: ${cursorLocation.y.toFixed(6)}, ${t(
+                    "footer_lbl_lng"
+                  )}: ${cursorLocation.x.toFixed(6)}`
+                : `${t("footer_lbl_x")}: ${cursorLocation.x.toFixed(2)}, ${t(
+                    "footer_lbl_y"
+                  )}: ${cursorLocation.y.toFixed(2)}`
+              : "--"}
           </span>
         </div>
 

@@ -1,0 +1,280 @@
+{
+  "common": {
+    "import": "가져오기",
+    "export": "내보내기",
+    "cancel": "취소",
+    "confirm": "확인",
+    "save": "저장",
+    "delete": "삭제",
+    "close": "닫기",
+    "loading": "로딩 중...",
+    "error": "오류",
+    "success": "성공",
+    "copy": "복사",
+    "paste": "붙여넣기",
+    "clear": "지우기",
+    "reset": "초기화",
+    "apply": "적용",
+    "search": "검색",
+    "noData": "데이터 없음",
+    "features": "피처",
+    "feature": "피처"
+  },
+  "header": {
+    "import": "가져오기",
+    "export": "내보내기"
+  },
+  "editor": {
+    "title": "편집기",
+    "geojson": "GeoJSON",
+    "wkt": "WKT",
+    "table": "테이블",
+    "collection": "피처 컬렉션",
+    "elements": "개별 피처",
+    "format": "포맷",
+    "validate": "검증",
+    "validJson": "유효한 GeoJSON",
+    "invalidJson": "유효하지 않은 JSON",
+    "loadContent": "계속 로드",
+    "largeFile": "파일이 큽니다. 성능에 영향을 줄 수 있습니다.",
+    "lineCount": "행",
+    "charCount": "문자",
+    "copySuccess": "클립보드에 복사됨",
+    "copyFail": "복사 실패",
+    "clearAllTitle": "모든 데이터 지우기?",
+    "clearAllDesc": "편집기 내용을 지우고 빈 GeoJSON으로 초기화합니다.",
+    "dataTooLarge": "데이터가 너무 커서 미리볼 수 없음",
+    "dataLargeDesc": "콘텐츠에 {{length}} 문자가 포함되어 있습니다 ({{size}} MB). 미리보기 시 브라우저가 느려질 수 있습니다."
+  },
+  "analysis": {
+    "title": "분석 도구",
+    "buffer": "버퍼 분석",
+    "union": "합집합",
+    "intersection": "교집합",
+    "difference": "차집합",
+    "dissolve": "디졸브",
+    "simplify": "단순화",
+    "convexHull": "볼록 껍질 (Convex Hull)",
+    "centroid": "중심점 (Centroid)",
+    "area": "면적",
+    "length": "길이",
+    "distance": "거리",
+    "bufferRadius": "버퍼 반경",
+    "units": "단위",
+    "meters": "미터",
+    "kilometers": "킬로미터",
+    "miles": "마일",
+    "feet": "피트",
+    "inches": "인치",
+    "inputs": {
+      "featureCollection": "피처 컬렉션",
+      "feature": "피처",
+      "geometry": "지오메트리"
+    },
+    "errors": {
+      "noInput": "GeoJSON 입력 없음",
+      "invalidJson": "유효하지 않은 GeoJSON",
+      "noFeatures": "피처를 찾을 수 없음",
+      "emptyResult": "{{label}} 결과가 비어 있음",
+      "calculationFailed": "{{label}} 계산 실패",
+      "invalidBufferRadius": "유효하지 않은 버퍼 반경",
+      "invalidSmoothIterations": "유효하지 않은 평활 반복 횟수",
+      "requiresPolygon": "폴리곤 또는 멀티폴리곤 입력 필요",
+      "requiresPoint": "포인트 피처 필요",
+      "requiresPointAndPolygon": "포인트와 폴리곤 피처 모두 필요",
+      "unionRequiresTwo": "합집합을 하려면 최소 2개의 폴리곤이 필요합니다",
+      "intersectRequiresTwo": "교집합을 하려면 최소 2개의 폴리곤이 필요합니다",
+      "differenceRequiresTwo": "차집합을 하려면 최소 2개의 폴리곤이 필요합니다",
+      "midpointRequiresTwo": "중점을 구하려면 정확히 2개의 포인트가 필요합니다",
+      "voronoiEmpty": "보로노이 결과가 비어 있음",
+      "gridTooDense": "그리드가 너무 촘촘합니다 (> {{countVal}} 셀). 최대 {{maxVal}}. 셀 크기를 늘리거나 영역을 줄이세요.",
+      "invalidCellSide": "유효하지 않은 셀 측면 길이"
+    },
+    "success": {
+      "measurementAdded": "측정 결과가 속성에 추가됨",
+      "replaced": "편집기 내용을 분석 결과로 교체함",
+      "added": "분석 결과를 편집기 내용에 추가함"
+    },
+    "tools": {
+      "center": {
+        "name": "중심",
+        "desc": "피처 또는 컬렉션의 절대 중심점을 계산합니다."
+      },
+      "bbox": {
+        "name": "경계 상자 (BBox)",
+        "desc": "GeoJSON 객체의 경계 상자를 계산합니다."
+      },
+      "polygonSmooth": {
+        "name": "폴리곤 평활화",
+        "desc": "구성 가능한 반복 횟수로 폴리곤 경계를 부드럽게 합니다."
+      },
+      "buffer": {
+        "name": "버퍼",
+        "desc": "입력 피처에서 지정된 반경의 버퍼를 계산합니다."
+      },
+      "voronoi": {
+        "name": "보로노이",
+        "desc": "입력 포인트에서 보로노이 다각형을 생성합니다."
+      },
+      "simplify": {
+        "name": "단순화",
+        "desc": "Ramer-Douglas-Peucker 알고리즘을 사용하여 정점을 제거해 단순화합니다."
+      },
+      "concave": {
+        "name": "오목 껍질 (Concave Hull)",
+        "desc": "포인트 집합을 기반으로 오목 껍질 폴리곤을 생성합니다."
+      },
+      "union": {
+        "name": "합집합",
+        "desc": "두 개 이상의 폴리곤을 하나의 폴리곤으로 병합합니다."
+      },
+      "intersect": {
+        "name": "교집합",
+        "desc": "폴리곤 집합의 공통 교차 영역을 가져옵니다."
+      },
+      "difference": {
+        "name": "차집합",
+        "desc": "첫 번째 폴리곤에서 후속 폴리곤을 뺀 차이를 계산합니다."
+      },
+      "midpoint": {
+        "name": "중점",
+        "desc": "두 점 사이의 중간 지점을 계산합니다."
+      },
+      "measurement": {
+        "name": "측정",
+        "desc": "피처에 면적(sqm/sqkm)과 길이(m/km) 속성을 추가합니다."
+      },
+      "pointsWithin": {
+        "name": "폴리곤 내 포인트",
+        "desc": "지정된 폴리곤 내에 있는 포인트를 찾습니다."
+      },
+      "hexGrid": {
+        "name": "육각형 그리드",
+        "desc": "경계 상자 내에 육각형 그리드를 생성합니다."
+      },
+      "pointGrid": {
+        "name": "포인트 그리드",
+        "desc": "경계 상자 내에 포인트 그리드를 생성합니다."
+      },
+      "squareGrid": {
+        "name": "사각형 그리드",
+        "desc": "경계 상자 내에 사각형 그리드를 생성합니다."
+      },
+      "convex": {
+        "name": "볼록 껍질",
+        "desc": "입력 피처의 볼록 껍질을 계산합니다."
+      }
+    },
+    "labels": {
+      "iterations": "반복 횟수",
+      "radius": "반경",
+      "tolerance": "허용 오차",
+      "maxEdge": "최대 가장자리",
+      "cellSide": "셀 측면",
+      "replace": "내용 교체",
+      "addToMap": "지도에 추가",
+      "copyResult": "결과 복사",
+      "searchTools": "도구 검색...",
+      "largeDataset": "대용량 데이터셋 감지됨. 브라우저가 일시적으로 멈출 수 있습니다.",
+      "merging": "병합 중...",
+      "run": "실행",
+      "result": "결과 (GeoJSON)",
+      "input": "입력"
+    }
+  },
+  "footerUI": {
+    "projection": "투영",
+    "coordinates": "좌표",
+    "zoom": "줌 레벨",
+    "scale": "축척",
+    "featuresCount": "{{count}} 피처",
+    "mousePosition": "위도: {{lat}}, 경도: {{lng}}",
+    "mousePositionXY": "X: {{x}}, Y: {{y}}"
+  },
+  "map": {
+    "drawing": {
+      "point": "포인트 그리기",
+      "line": "선 그리기",
+      "polygon": "폴리곤 그리기",
+      "rectangle": "사각형 그리기",
+      "delete": "선택 삭제",
+      "modeActive": "그리기 모드 활성화됨. Esc를 눌러 종료."
+    },
+    "navigation": {
+      "zoomIn": "확대",
+      "zoomOut": "축소",
+      "resetNorth": "북쪽 재설정"
+    },
+    "measure": {
+      "distance": "거리 측정",
+      "area": "면적 측정"
+    },
+    "snapshot": "스냅샷",
+    "search": "장소 검색...",
+    "properties": {
+      "title": "속성",
+      "noProperties": "속성 없음",
+      "add": "속성 추가",
+      "cancel": "취소",
+      "save": "저장",
+      "selected": "선택됨. 더블 클릭하거나 우클릭하여 속성 편집. Esc로 선택 취소.",
+      "key": "키",
+      "value": "값",
+      "remove": "제거"
+    },
+    "baseMap": {
+      "switch": "배경 지도 전환",
+      "osm": "OpenStreetMap",
+      "cartoLight": "CartoDB Light",
+      "cartoDark": "CartoDB Dark",
+      "satellite": "위성"
+    }
+  },
+  "export": {
+    "title": "내보내기",
+    "description": "다양한 형식으로 GeoJSON 데이터 내보내기",
+    "format": "형식",
+    "filename": "파일 이름",
+    "coordinateSystem": "좌표계",
+    "locked": "잠김",
+    "download": "다운로드",
+    "error": {
+      "invalid": "유효하지 않은 GeoJSON 데이터",
+      "noFeatures": "내보낼 피처가 없음",
+      "failed": "내보내기 실패",
+      "shpFailed": "Shapefile 생성 실패"
+    },
+    "success": "내보내기 성공"
+  },
+  "import": {
+    "title": "데이터 가져오기",
+    "description": "GeoJSON, Shapefile 또는 WKT 파일 업로드",
+    "dragDrop": "파일을 여기로 드래그",
+    "or": "또는",
+    "browse": "파일 찾아보기",
+    "supportedFormats": "지원되는 형식",
+    "options": "가져오기 옵션",
+    "replace": "기존 피처 교체",
+    "importBtn": "가져오기",
+    "error": {
+      "unsupported": "지원되지 않는 파일 형식. GeoJSON, Shapefile (ZIP) 또는 WKT (TXT) 파일을 업로드하세요.",
+      "invalid": "유효하지 않은 GeoJSON 파일.",
+      "failed": "파일 읽기 실패."
+    }
+  },
+  "language": {
+    "zh": "中文 (简体)",
+    "zh-TW": "中文 (繁體)",
+    "en": "English",
+    "ko": "한국어",
+    "ja": "日本語",
+    "fr": "프랑스어",
+    "es": "스페인어"
+  },
+  "footer_coordinates_v2": "위도: {{lat}}, 경도: {{lng}}",
+  "footer_coordinates_xy_v2": "X: {{x}}, Y: {{y}}",
+  "footer_lbl_lat": "위도",
+  "footer_lbl_lng": "경도",
+  "footer_lbl_x": "X",
+  "footer_lbl_y": "Y"
+}

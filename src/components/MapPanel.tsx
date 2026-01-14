@@ -1,4 +1,14 @@
-import { Layers, Minus, Plus, Ruler, Sparkles, Trash2, X } from "lucide-react";
+import {
+  Camera,
+  Layers,
+  Minus,
+  Plus,
+  Ruler,
+  Search,
+  Sparkles,
+  Trash2,
+  X,
+} from "lucide-react";
 import { defaults as defaultControls } from "ol/control";
 import type { EventsKey } from "ol/events";
 import { all, mouseActionButton } from "ol/events/condition";
@@ -22,7 +32,7 @@ import type MapBrowserEvent from "ol/MapBrowserEvent";
 import { unByKey } from "ol/Observable";
 import "ol/ol.css";
 import Overlay from "ol/Overlay";
-import { fromLonLat } from "ol/proj";
+import { fromLonLat, transform } from "ol/proj";
 import OSM from "ol/source/OSM";
 import VectorSource from "ol/source/Vector";
 import XYZ from "ol/source/XYZ";
@@ -31,6 +41,7 @@ import { Circle as CircleStyle, Fill, Stroke, Style } from "ol/style";
 import { createDefaultStyle } from "ol/style/Style";
 import View from "ol/View";
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useGeojsonStore } from "../store/geojsonStore";
 import { AnalysisPanel } from "./AnalysisPanel";
@@ -98,6 +109,7 @@ const ctrlDragOnly = (event: { originalEvent: KeyboardEvent | MouseEvent }) => {
 };
 
 export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
+  const { t } = useTranslation();
   const [activeMeasureTool, setActiveMeasureTool] = useState<string | null>(
     null
   );
@@ -147,6 +159,43 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
     (state) => state.selectedProjection
   );
 
+  const setCursorLocation = useGeojsonStore((state) => state.setCursorLocation);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          searchQuery
+        )}`
+      );
+      const data = await response.json();
+      setSearchResults(data);
+
+      if (data && data.length > 0) {
+        const first = data[0];
+        const view = mapRef.current?.getView();
+        if (view) {
+          view.animate({
+            center: fromLonLat([parseFloat(first.lon), parseFloat(first.lat)]),
+            zoom: 12,
+            duration: 1000,
+          });
+        }
+      } else {
+        toast.error(t("map.search.noResults") || "No results found");
+      }
+    } catch (error) {
+      console.error("Search failed:", error);
+      toast.error(t("map.search.error") || "Search failed");
+    }
+  };
+
   const handleBaseMapChange = (baseMapId: BaseMap) => {
     setActiveBaseMap(baseMapId);
     setBaseMapMenuOpen(false);
@@ -160,12 +209,13 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
     if (!baseMap || !baseLayer) return;
 
     if (baseMap.id === "osm") {
-      baseLayer.setSource(new OSM());
+      baseLayer.setSource(new OSM({ crossOrigin: "anonymous" }));
     } else if (baseMap.url) {
       baseLayer.setSource(
         new XYZ({
           url: baseMap.url,
           attributions: baseMap.attribution,
+          crossOrigin: "anonymous",
         })
       );
     }
@@ -299,7 +349,77 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
     });
 
     propertyEditorFeature.setProperties(nextProps);
+    propertyEditorFeature.setProperties(nextProps);
     closePropertyEditor();
+  };
+
+  const handleSnapshot = () => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    map.renderSync();
+    const mapCanvas = document.createElement("canvas");
+    const size = map.getSize();
+    if (!size) return;
+
+    mapCanvas.width = size[0];
+    mapCanvas.height = size[1];
+    const mapContext = mapCanvas.getContext("2d");
+    if (!mapContext) return;
+
+    const canvases = map
+      .getViewport()
+      .querySelectorAll(".ol-layer canvas, canvas.ol-layer");
+
+    Array.prototype.forEach.call(canvases, function (canvas) {
+      if (canvas.width > 0) {
+        const opacity = canvas.parentNode.style.opacity;
+        mapContext.globalAlpha = opacity === "" ? 1 : Number(opacity);
+        const transform = canvas.style.transform;
+
+        // Get the transform matrix from the style
+        const matrix = transform
+          .match(/^matrix\(([^\(]*)\)$/)?.[1]
+          .split(",")
+          .map(Number);
+
+        if (matrix) {
+          mapContext.setTransform(
+            matrix[0],
+            matrix[1],
+            matrix[2],
+            matrix[3],
+            matrix[4],
+            matrix[5]
+          );
+        }
+
+        mapContext.drawImage(canvas, 0, 0);
+      }
+    });
+
+    try {
+      const blobCallback = (blob: Blob | null) => {
+        if (blob) {
+          const link = document.createElement("a");
+          link.download = "map-snapshot.png";
+          link.href = URL.createObjectURL(blob);
+          link.click();
+          URL.revokeObjectURL(link.href);
+        }
+      };
+
+      // @ts-ignore - IE support not needed but if types were present
+      if (window.navigator?.msSaveBlob && mapCanvas.msToBlob) {
+        // @ts-ignore
+        window.navigator.msSaveBlob(mapCanvas.msToBlob(), "map-snapshot.png");
+      } else {
+        mapCanvas.toBlob(blobCallback);
+      }
+    } catch (e) {
+      console.error("Snapshot failed", e);
+      toast.error(t("export.error.failed"));
+    }
   };
   const formatGeojsonFromFeatures = (features: Feature<Geometry>[]) => {
     const options = {
@@ -432,7 +552,7 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
       }),
       layers: [
         new TileLayer({
-          source: new OSM(),
+          source: new OSM({ crossOrigin: "anonymous" }),
         }),
         vectorLayer,
         analysisLayer,
@@ -490,9 +610,7 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
         event.selected.length > 0 || select.getFeatures().getLength() > 0;
       if (hasSelection && !isEditingRef.current) {
         setEditingState(true);
-        toast(
-          "Selected. Double-click or right-click to edit properties. Esc to deselect."
-        );
+        toast(t("map.properties.selected"));
         return;
       }
       if (!hasSelection && isEditingRef.current) {
@@ -564,7 +682,7 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
     }
 
     if (!previousDrawToolRef.current && isDrawing) {
-      toast("Drawing mode active. Press Esc to exit.");
+      toast(t("map.drawing.modeActive"));
     }
 
     previousDrawToolRef.current = activeDrawTool;
@@ -774,12 +892,32 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
         return;
       }
 
-      targetElement.style.cursor =
-        activeDrawTool || activeMeasureTool ? "crosshair" : "";
+      if (isOverFeature) {
+        targetElement.style.cursor = "pointer";
+      } else {
+        targetElement.style.cursor =
+          activeDrawTool || activeMeasureTool ? "crosshair" : "";
+      }
+
+      const coordinate = event.coordinate;
+      if (coordinate) {
+        try {
+          // View is always EPSG:3857
+          const transformed = transform(
+            coordinate,
+            "EPSG:3857",
+            selectedProjection
+          );
+          setCursorLocation({ x: transformed[0], y: transformed[1] });
+        } catch (e) {
+          // Fallback or ignore
+        }
+      }
     };
 
     const handleMouseLeave = () => {
       targetElement.style.cursor = "";
+      setCursorLocation(null);
     };
 
     map.on("pointermove" as const, handlePointerMove);
@@ -789,7 +927,13 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
       map.un("pointermove" as const, handlePointerMove);
       targetElement.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, [activeDrawTool, activeMeasureTool, isMapReady]);
+  }, [
+    activeDrawTool,
+    activeMeasureTool,
+    isMapReady,
+    selectedProjection,
+    setCursorLocation,
+  ]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -1115,96 +1259,154 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
         <div ref={mapContainerRef} className="w-full h-full" />
       </div>
 
-      {/* Drawing Tools - Top Left */}
-      <div className="absolute top-4 left-4 flex flex-col gap-1 bg-[#18181b] rounded-lg p-1 border border-[#27272a] shadow-lg">
-        <button
-          className={`p-2 rounded transition-colors ${
-            activeDrawTool === "Point"
-              ? "bg-[#3b82f6] text-white"
-              : "text-[#e4e4e7] hover:bg-[#27272a]"
-          }`}
-          title="Draw Point"
-          aria-pressed={activeDrawTool === "Point"}
-          onClick={() => {
-            setActiveMeasureTool(null);
-            setActiveDrawTool(activeDrawTool === "Point" ? null : "Point");
-          }}
+      <div className="absolute top-4 left-4 z-10 flex flex-col gap-4 pointer-events-none items-start">
+        {/* Expanding Search */}
+        <div style={{ pointerEvents: "auto" }}>
+          <div
+            className="flex items-center bg-[#18181b] rounded-full border border-[#27272a] shadow-lg overflow-hidden transition-all duration-300 ease-in-out"
+            style={{ width: searchOpen ? "280px" : "36px" }}
+          >
+            <button
+              onClick={() => {
+                setSearchOpen(!searchOpen);
+                if (!searchOpen) {
+                  setTimeout(
+                    () => document.getElementById("search-input")?.focus(),
+                    100
+                  );
+                }
+              }}
+              className="p-2 text-[#a1a1aa] hover:text-[#e4e4e7] transition-colors flex-shrink-0"
+              title={t("map.search")}
+            >
+              <Search className="w-5 h-5" />
+            </button>
+
+            {/* Search input - only visible when expanded */}
+            <form
+              onSubmit={handleSearch}
+              className={`flex-1 flex items-center pr-3 transition-opacity duration-200 ${
+                searchOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+              }`}
+            >
+              <input
+                id="search-input"
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={t("map.search")}
+                className="flex-1 bg-transparent border-none text-sm text-[#e4e4e7] placeholder-[#52525b] focus:outline-none"
+                tabIndex={searchOpen ? 0 : -1}
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="p-1 text-[#52525b] hover:text-[#e4e4e7] rounded-full hover:bg-[#27272a] transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              )}
+            </form>
+          </div>
+        </div>
+
+        {/* Drawing Tools */}
+        <div
+          className="flex flex-col gap-1 bg-[#18181b] rounded-lg p-1 border border-[#27272a] shadow-lg"
+          style={{ pointerEvents: "auto" }}
         >
-          <PointIcon className="w-4 h-4" />
-        </button>
-        <button
-          className={`p-2 rounded transition-colors ${
-            activeDrawTool === "LineString"
-              ? "bg-[#3b82f6] text-white"
-              : "text-[#e4e4e7] hover:bg-[#27272a]"
-          }`}
-          title="Draw Line"
-          aria-pressed={activeDrawTool === "LineString"}
-          onClick={() => {
-            setActiveMeasureTool(null);
-            setActiveDrawTool(
-              activeDrawTool === "LineString" ? null : "LineString"
-            );
-          }}
-        >
-          <LineStringIcon className="w-4 h-4" />
-        </button>
-        <button
-          className={`p-2 rounded transition-colors ${
-            activeDrawTool === "Polygon"
-              ? "bg-[#3b82f6] text-white"
-              : "text-[#e4e4e7] hover:bg-[#27272a]"
-          }`}
-          title="Draw Polygon"
-          aria-pressed={activeDrawTool === "Polygon"}
-          onClick={() => {
-            setActiveMeasureTool(null);
-            setActiveDrawTool(activeDrawTool === "Polygon" ? null : "Polygon");
-          }}
-        >
-          <PolygonIcon className="w-4 h-4" />
-        </button>
-        <button
-          className={`p-2 rounded transition-colors ${
-            activeDrawTool === "Rectangle"
-              ? "bg-[#3b82f6] text-white"
-              : "text-[#e4e4e7] hover:bg-[#27272a]"
-          }`}
-          title="Draw Rectangle"
-          aria-pressed={activeDrawTool === "Rectangle"}
-          onClick={() => {
-            setActiveMeasureTool(null);
-            setActiveDrawTool(
-              activeDrawTool === "Rectangle" ? null : "Rectangle"
-            );
-          }}
-        >
-          <RectangleIcon className="w-4 h-4" />
-        </button>
-        <div className="h-px bg-[#27272a] my-1"></div>
-        <button
-          className="p-2 text-[#ef4444] hover:bg-[#27272a] rounded transition-colors"
-          title="Delete"
-          onClick={handleDeleteSelected}
-        >
-          <Trash2 className="w-4 h-4" />
-        </button>
+          <button
+            className={`p-2 rounded transition-colors ${
+              activeDrawTool === "Point"
+                ? "bg-[#3b82f6] text-white"
+                : "text-[#e4e4e7] hover:bg-[#27272a]"
+            }`}
+            title={t("map.drawing.point")}
+            aria-pressed={activeDrawTool === "Point"}
+            onClick={() => {
+              setActiveMeasureTool(null);
+              setActiveDrawTool(activeDrawTool === "Point" ? null : "Point");
+            }}
+          >
+            <PointIcon className="w-4 h-4" />
+          </button>
+          <button
+            className={`p-2 rounded transition-colors ${
+              activeDrawTool === "LineString"
+                ? "bg-[#3b82f6] text-white"
+                : "text-[#e4e4e7] hover:bg-[#27272a]"
+            }`}
+            title={t("map.drawing.line")}
+            aria-pressed={activeDrawTool === "LineString"}
+            onClick={() => {
+              setActiveMeasureTool(null);
+              setActiveDrawTool(
+                activeDrawTool === "LineString" ? null : "LineString"
+              );
+            }}
+          >
+            <LineStringIcon className="w-4 h-4" />
+          </button>
+          <button
+            className={`p-2 rounded transition-colors ${
+              activeDrawTool === "Polygon"
+                ? "bg-[#3b82f6] text-white"
+                : "text-[#e4e4e7] hover:bg-[#27272a]"
+            }`}
+            title={t("map.drawing.polygon")}
+            aria-pressed={activeDrawTool === "Polygon"}
+            onClick={() => {
+              setActiveMeasureTool(null);
+              setActiveDrawTool(
+                activeDrawTool === "Polygon" ? null : "Polygon"
+              );
+            }}
+          >
+            <PolygonIcon className="w-4 h-4" />
+          </button>
+          <button
+            className={`p-2 rounded transition-colors ${
+              activeDrawTool === "Rectangle"
+                ? "bg-[#3b82f6] text-white"
+                : "text-[#e4e4e7] hover:bg-[#27272a]"
+            }`}
+            title={t("map.drawing.rectangle")}
+            aria-pressed={activeDrawTool === "Rectangle"}
+            onClick={() => {
+              setActiveMeasureTool(null);
+              setActiveDrawTool(
+                activeDrawTool === "Rectangle" ? null : "Rectangle"
+              );
+            }}
+          >
+            <RectangleIcon className="w-4 h-4" />
+          </button>
+          <div className="h-px bg-[#27272a] my-1"></div>
+          <button
+            className="p-2 text-[#ef4444] hover:bg-[#27272a] rounded transition-colors"
+            title={t("map.drawing.delete")}
+            onClick={handleDeleteSelected}
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       {/* Navigation Controls - Top Right */}
-      <div className="absolute top-4 right-4 flex flex-col gap-2">
+      <div className="absolute top-4 right-4 flex flex-col gap-2 items-end">
         {/* Zoom and Compass */}
-        <div className="flex flex-col gap-1 bg-[#18181b] rounded-lg p-1 border border-[#27272a] shadow-lg">
+        <div className="w-9 flex flex-col gap-1 bg-[#18181b] rounded-lg p-1 border border-[#27272a] shadow-lg">
           <button
             className="p-2 text-[#e4e4e7] hover:bg-[#27272a] rounded transition-colors"
-            title="Zoom In"
+            title={t("map.navigation.zoomIn")}
             onClick={handleZoomIn}
           >
             <Plus className="w-4 h-4" />
           </button>
           <button
             className="p-2 text-[#e4e4e7] hover:bg-[#27272a] rounded transition-colors"
-            title="Zoom Out"
+            title={t("map.navigation.zoomOut")}
             onClick={handleZoomOut}
           >
             <Minus className="w-4 h-4" />
@@ -1212,7 +1414,7 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
           <div className="h-px bg-[#27272a] my-1"></div>
           <button
             className="p-2 text-[#e4e4e7] hover:bg-[#27272a] rounded transition-colors"
-            title="Reset North"
+            title={t("map.navigation.resetNorth")}
             onClick={handleResetNorth}
           >
             <CompassIcon className="w-4 h-4" style={compassStyle} />
@@ -1220,7 +1422,7 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
         </div>
 
         {/* Measure Tools */}
-        <div className="flex flex-col gap-1 bg-[#18181b] rounded-lg p-1 border border-[#27272a] shadow-lg">
+        <div className="w-9 flex flex-col gap-1 bg-[#18181b] rounded-lg p-1 border border-[#27272a] shadow-lg">
           <button
             onClick={() => {
               const nextTool =
@@ -1235,7 +1437,7 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
                 ? "bg-[#3b82f6] text-white"
                 : "text-[#e4e4e7] hover:bg-[#27272a]"
             }`}
-            title="Measure Distance"
+            title={t("map.measure.distance")}
           >
             <Ruler className="w-4 h-4" />
           </button>
@@ -1252,14 +1454,24 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
                 ? "bg-[#3b82f6] text-white"
                 : "text-[#e4e4e7] hover:bg-[#27272a]"
             }`}
-            title="Measure Area"
+            title={t("map.measure.area")}
           >
             <MeasureAreaIcon className="w-4 h-4" />
           </button>
         </div>
 
+        <div className="w-9 flex flex-col gap-1 bg-[#18181b] rounded-lg p-1 border border-[#27272a] shadow-lg">
+          <button
+            onClick={handleSnapshot}
+            className="p-2 text-[#e4e4e7] hover:bg-[#27272a] rounded transition-colors"
+            title={t("map.snapshot")}
+          >
+            <Camera className="w-4 h-4" />
+          </button>
+        </div>
+
         {/* Analysis Tools */}
-        <div className="flex flex-col gap-1 bg-[#18181b] rounded-lg p-1 border border-[#27272a] shadow-lg">
+        <div className="w-9 flex flex-col gap-1 bg-[#18181b] rounded-lg p-1 border border-[#27272a] shadow-lg">
           <button
             onClick={() => setAnalysisOpen((open) => !open)}
             className={`p-2 rounded transition-colors ${
@@ -1267,7 +1479,7 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
                 ? "bg-[#3b82f6] text-white"
                 : "text-[#e4e4e7] hover:bg-[#27272a]"
             }`}
-            title="Spatial Analysis"
+            title={t("map.analysis.title")}
             aria-pressed={analysisOpen}
           >
             <Sparkles className="w-4 h-4" />
@@ -1303,12 +1515,12 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
           >
             <div className="flex flex-col gap-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm">Properties</span>
+                <span className="text-sm">{t("map.properties.title")}</span>
                 <button
                   className="p-1 text-[#a1a1aa] hover:text-[#e4e4e7] hover:bg-[#27272a] rounded transition-colors"
                   onClick={closePropertyEditor}
-                  title="Close"
-                  aria-label="Close"
+                  title={t("map.properties.close")}
+                  aria-label={t("map.properties.close")}
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -1319,7 +1531,9 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
                 style={{ maxHeight: 240 }}
               >
                 {propertyEntries.length === 0 ? (
-                  <div className="text-xs text-[#71717a]">No properties</div>
+                  <div className="text-xs text-[#71717a]">
+                    {t("map.properties.noProperties")}
+                  </div>
                 ) : (
                   propertyEntries.map((entry) => (
                     <div
@@ -1328,7 +1542,7 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
                     >
                       <input
                         className="min-w-0 flex-1 bg-[#0b0b0f] border border-[#27272a] rounded px-2 py-1 text-[#e4e4e7] text-xs focus:outline-none focus:ring-2 focus:ring-[#3b82f6]/50"
-                        placeholder="key"
+                        placeholder={t("map.properties.key")}
                         value={entry.key}
                         onChange={(event) =>
                           updatePropertyEntry(
@@ -1340,7 +1554,7 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
                       />
                       <input
                         className="min-w-0 flex-1 bg-[#0b0b0f] border border-[#27272a] rounded px-2 py-1 text-[#e4e4e7] text-xs focus:outline-none focus:ring-2 focus:ring-[#3b82f6]/50"
-                        placeholder="value"
+                        placeholder={t("map.properties.value")}
                         value={entry.value}
                         onChange={(event) =>
                           updatePropertyEntry(
@@ -1353,8 +1567,8 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
                       <button
                         className="p-1 text-[#a1a1aa] hover:text-[#e4e4e7] hover:bg-[#27272a] rounded transition-colors"
                         onClick={() => removePropertyEntry(entry.id)}
-                        title="Remove"
-                        aria-label="Remove"
+                        title={t("map.properties.remove")}
+                        aria-label={t("map.properties.remove")}
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -1368,20 +1582,20 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
                   className="text-xs text-[#a1a1aa] hover:text-[#e4e4e7] transition-colors"
                   onClick={addPropertyEntry}
                 >
-                  Add property
+                  {t("map.properties.add")}
                 </button>
                 <div className="flex items-center gap-1">
                   <button
                     className="px-3 py-1.5 rounded text-xs text-[#a1a1aa] hover:text-[#e4e4e7] hover:bg-[#27272a] transition-colors"
                     onClick={closePropertyEditor}
                   >
-                    Cancel
+                    {t("map.properties.cancel")}
                   </button>
                   <button
                     className="px-3 py-1.5 rounded text-xs bg-[#3b82f6] text-white"
                     onClick={savePropertyChanges}
                   >
-                    Save
+                    {t("map.properties.save")}
                   </button>
                 </div>
               </div>
@@ -1406,7 +1620,13 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
                     : "text-[#a1a1aa] hover:bg-[#27272a] hover:text-[#e4e4e7]"
                 }`}
               >
-                {baseMap.name}
+                {baseMap.id === "osm"
+                  ? t("map.baseMap.osm")
+                  : baseMap.id === "carto-light"
+                  ? t("map.baseMap.cartoLight")
+                  : baseMap.id === "carto-dark"
+                  ? t("map.baseMap.cartoDark")
+                  : t("map.baseMap.satellite")}
               </button>
             ))}
           </div>
@@ -1418,7 +1638,7 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
               ? "bg-[#3b82f6] text-white border-[#3b82f6]"
               : "bg-[#18181b] text-[#a1a1aa] hover:bg-[#27272a] hover:text-[#e4e4e7] hover:border-[#3f3f46]"
           }`}
-          title="Switch Base Map"
+          title={t("map.baseMap.switch")}
         >
           <Layers className="w-5 h-5" />
         </button>

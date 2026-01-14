@@ -6,6 +6,7 @@ import Editor, {
 import { Copy, FileWarning, Table as TableIcon, Trash2 } from "lucide-react";
 import GeoJSON from "ol/format/GeoJSON";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useGeojsonStore } from "../store/geojsonStore";
 import {
@@ -29,6 +30,7 @@ export function EditorPanel({
   selectedProjection,
   onProjectionChange,
 }: EditorPanelProps) {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("geojson");
   const [showProjectionMenu, setShowProjectionMenu] = useState(false);
   const [copyStatus, setCopyStatus] = useState<"idle" | "success" | "error">(
@@ -131,7 +133,23 @@ export function EditorPanel({
   };
 
   const handleCopy = async () => {
-    const textToCopy = activeText;
+    let textToCopy = activeText;
+
+    if (activeTab === "table") {
+      const header = tableData.columns.join("\t");
+      const rows = tableData.rows
+        .map((row) =>
+          tableData.columns
+            .map((col) => {
+              const val = row.properties[col];
+              return val === null || val === undefined ? "" : String(val);
+            })
+            .join("\t")
+        )
+        .join("\n");
+      textToCopy = header ? `${header}\n${rows}` : "";
+    }
+
     if (!textToCopy) {
       setCopyStatus("success");
       return;
@@ -152,9 +170,10 @@ export function EditorPanel({
         document.body.removeChild(textarea);
       }
       setCopyStatus("success");
-      toast.success("Copied to clipboard");
+      toast.success(t("editor.copySuccess"));
     } catch {
       setCopyStatus("error");
+      toast.error(t("editor.copyFail"));
     }
 
     window.setTimeout(() => setCopyStatus("idle"), 1200);
@@ -168,7 +187,10 @@ export function EditorPanel({
   };
 
   return (
-    <div className="w-[420px] min-w-[420px] max-w-[420px] bg-[#1e1e1e] border-r border-[#27272a] flex flex-col flex-shrink-0 transition-all duration-300 ease-in-out">
+    <div
+      className="w-[420px] bg-[#1e1e1e] border-r border-[#27272a] flex flex-col flex-none"
+      style={{ width: 420, minWidth: 420, maxWidth: 420 }}
+    >
       {/* Toolbar */}
       <div className="h-12 border-b border-[#27272a] flex items-center justify-between px-4">
         <div className="flex gap-1">
@@ -180,7 +202,7 @@ export function EditorPanel({
                 : "text-[#a1a1aa] hover:text-[#e4e4e7]"
             }`}
           >
-            GeoJSON
+            {t("editor.geojson")}
           </button>
           <button
             onClick={() => setActiveTab("wkt")}
@@ -190,32 +212,9 @@ export function EditorPanel({
                 : "text-[#a1a1aa] hover:text-[#e4e4e7]"
             }`}
           >
-            WKT
+            {t("editor.wkt")}
           </button>
-          {activeTab === "wkt" && (
-            <div className="flex gap-1 ml-2">
-              <button
-                onClick={() => setWktDisplayMode("collection")}
-                className={`px-2 py-1 text-xs rounded transition-colors ${
-                  wktDisplayMode === "collection"
-                    ? "bg-[#27272a] text-white"
-                    : "text-[#a1a1aa] hover:text-[#e4e4e7]"
-                }`}
-              >
-                Collection
-              </button>
-              <button
-                onClick={() => setWktDisplayMode("elements")}
-                className={`px-2 py-1 text-xs rounded transition-colors ${
-                  wktDisplayMode === "elements"
-                    ? "bg-[#27272a] text-white"
-                    : "text-[#a1a1aa] hover:text-[#e4e4e7]"
-                }`}
-              >
-                Elements
-              </button>
-            </div>
-          )}
+
           <button
             onClick={() => setActiveTab("table")}
             className={`px-3 py-1.5 text-sm rounded transition-colors ${
@@ -224,26 +223,24 @@ export function EditorPanel({
                 : "text-[#a1a1aa] hover:text-[#e4e4e7]"
             }`}
           >
-            Table
+            {t("editor.table")}
           </button>
         </div>
         <div className="flex items-center gap-1">
-          {activeTab !== "table" && (
-            <button
-              className="p-1.5 text-[#a1a1aa] hover:text-[#e4e4e7] hover:bg-[#27272a] rounded transition-colors"
-              onClick={handleCopy}
-              title={
-                copyStatus === "success"
-                  ? "Copied"
-                  : copyStatus === "error"
-                  ? "Copy failed"
-                  : "Copy"
-              }
-              aria-label="Copy"
-            >
-              <Copy className="w-4 h-4" />
-            </button>
-          )}
+          <button
+            className="p-1.5 text-[#a1a1aa] hover:text-[#e4e4e7] hover:bg-[#27272a] rounded transition-colors"
+            onClick={handleCopy}
+            title={
+              copyStatus === "success"
+                ? t("editor.copySuccess")
+                : copyStatus === "error"
+                ? t("editor.copyFail")
+                : t("common.copy")
+            }
+            aria-label={t("common.copy")}
+          >
+            <Copy className="w-4 h-4" />
+          </button>
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <button
@@ -257,22 +254,21 @@ export function EditorPanel({
             <AlertDialogContent className="bg-[#18181b] border-[#27272a] text-[#e4e4e7]">
               <AlertDialogHeader className="text-left">
                 <AlertDialogTitle className="text-sm text-[#e4e4e7]">
-                  Clear all data?
+                  {t("editor.clearAllTitle")}
                 </AlertDialogTitle>
                 <AlertDialogDescription className="text-xs text-[#a1a1aa]">
-                  This will clear the editor content and reset it to an empty
-                  GeoJSON.
+                  {t("editor.clearAllDesc")}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter className="sm:justify-end">
                 <AlertDialogCancel className="border-[#27272a] bg-transparent text-[#a1a1aa] hover:bg-[#27272a] hover:text-[#e4e4e7]">
-                  Cancel
+                  {t("common.cancel")}
                 </AlertDialogCancel>
                 <AlertDialogAction
                   className="bg-[#3b82f6] text-white hover:bg-[#2563eb]"
                   onClick={handleClearAll}
                 >
-                  Clear
+                  {t("common.clear")}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -282,7 +278,10 @@ export function EditorPanel({
 
       {/* Code Editor Area */}
       {activeTab === "table" ? (
-        <div className="flex-1 bg-[#0b0b0f] overflow-auto editor-scrollbar flex flex-col w-full transition-opacity duration-200 ease-in-out">
+        <div
+          className="flex-1 bg-[#0b0b0f] overflow-auto editor-scrollbar flex flex-col w-full transition-opacity duration-200 ease-in-out"
+          style={{ scrollbarGutter: "stable" }}
+        >
           <table className="min-w-full text-left text-sm text-[#e4e4e7] border-collapse relative">
             <thead className="bg-[#18181b] sticky top-0 z-10 shadow-sm">
               <tr>
@@ -319,7 +318,7 @@ export function EditorPanel({
           {tableData.rows.length === 0 && (
             <div className="flex-1 flex flex-col items-center justify-center text-[#52525b] gap-2">
               <TableIcon className="w-8 h-8 opacity-20" />
-              <span className="text-sm">No feature data to display</span>
+              <span className="text-sm">{t("common.noData")}</span>
             </div>
           )}
         </div>
@@ -328,26 +327,31 @@ export function EditorPanel({
           <FileWarning className="w-12 h-12 opacity-20" />
           <div className="space-y-1">
             <p className="text-sm font-medium text-[#e4e4e7]">
-              Data too large for preview
+              {t("editor.dataTooLarge")}
             </p>
             <p className="text-xs">
-              The content is{" "}
-              {new Intl.NumberFormat("en-US").format(activeText.length)}{" "}
-              characters ({(activeText.length / 1024 / 1024).toFixed(2)} MB).
-              Previewing it may freeze the browser.
+              {t("editor.dataLargeDesc", {
+                length: new Intl.NumberFormat("en-US").format(
+                  activeText.length
+                ),
+                size: (activeText.length / 1024 / 1024).toFixed(2),
+              })}
             </p>
           </div>
           <button
             onClick={() => setForceShow(true)}
             className="px-4 py-2 bg-[#27272a] hover:bg-[#3f3f46] text-[#e4e4e7] text-xs rounded transition-colors"
           >
-            Load Anyway
+            {t("editor.loadContent")}
           </button>
         </div>
       ) : (
         <div
           className="flex-1 bg-[#0b0b0f] overflow-auto editor-scrollbar transition-opacity duration-200 ease-in-out"
-          style={{ fontFamily: 'Menlo, Monaco, "JetBrains Mono", monospace' }}
+          style={{
+            fontFamily: 'Menlo, Monaco, "JetBrains Mono", monospace',
+            scrollbarGutter: "stable",
+          }}
         >
           <div className="flex min-h-full">
             {/* Line numbers */}
@@ -431,7 +435,8 @@ export function EditorPanel({
           </button>
           <span className="text-[10px] text-[#52525b]">•</span>
           <span className="text-[10px] text-[#a1a1aa] min-w-[60px] text-right">
-            {new Intl.NumberFormat("en-US").format(activeText.length)} chars
+            {new Intl.NumberFormat("en-US").format(activeText.length)}{" "}
+            {t("editor.charCount")}
           </span>
         </div>
 

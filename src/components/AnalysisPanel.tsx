@@ -41,6 +41,7 @@ import type Map from "ol/Map";
 import type VectorSource from "ol/source/Vector";
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useGeojsonStore } from "../store/geojsonStore";
 
@@ -74,6 +75,7 @@ export function AnalysisPanel({
   map,
   analysisSource,
 }: AnalysisPanelProps) {
+  const { t } = useTranslation();
   const [analysisActiveTool, setAnalysisActiveTool] = useState<string | null>(
     null
   );
@@ -103,10 +105,10 @@ export function AnalysisPanel({
 
   const analysisInputLabel =
     geojsonMode === "featureCollection"
-      ? "FeatureCollection"
+      ? t("analysis.inputs.featureCollection")
       : geojsonMode === "feature"
-      ? "Feature"
-      : "Geometry";
+      ? t("analysis.inputs.feature")
+      : t("analysis.inputs.geometry");
 
   const handleAnalysisEditorWillMount: BeforeMount = (monaco: Monaco) => {
     monaco.editor.defineTheme("geojson-tool", {
@@ -266,7 +268,7 @@ export function AnalysisPanel({
   const getAnalysisInput = () => {
     const trimmed = geojsonText.trim();
     if (!trimmed) {
-      return { error: "No GeoJSON input." };
+      return { error: t("analysis.errors.noInput") };
     }
 
     let features: Feature<Geometry>[] = [];
@@ -276,11 +278,11 @@ export function AnalysisPanel({
         featureProjection: "EPSG:4326",
       }) as Feature<Geometry>[];
     } catch {
-      return { error: "Invalid GeoJSON." };
+      return { error: t("analysis.errors.invalidJson") };
     }
 
     if (features.length === 0) {
-      return { error: "No features found." };
+      return { error: t("analysis.errors.noFeatures") };
     }
 
     const rawInput = rawGeojson;
@@ -302,7 +304,7 @@ export function AnalysisPanel({
       featureProjection: selectedProjection,
     });
     if (outputFeatures.length === 0) {
-      setAnalysisError(`${label} result is empty.`);
+      setAnalysisError(t("analysis.errors.emptyResult", { label }));
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -354,7 +356,9 @@ export function AnalysisPanel({
     try {
       centerFeature = turfCenter(analysisInput.inputObject);
     } catch {
-      setAnalysisError("Center calculation failed.");
+      setAnalysisError(
+        t("analysis.errors.calculationFailed", { label: "Center" })
+      );
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -402,9 +406,7 @@ export function AnalysisPanel({
     });
 
     if (hasInvalidGeometry) {
-      setAnalysisError(
-        "Polygon Smooth requires Polygon or MultiPolygon input."
-      );
+      setAnalysisError(t("analysis.errors.requiresPolygon"));
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -424,13 +426,15 @@ export function AnalysisPanel({
         iterations,
       });
     } catch {
-      setAnalysisError("Polygon Smooth calculation failed.");
+      setAnalysisError(
+        t("analysis.errors.calculationFailed", { label: "Polygon Smooth" })
+      );
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
     }
 
-    setAnalysisActiveTool("Polygon Smooth");
+    setAnalysisActiveTool(t("analysis.tools.polygonSmooth.name"));
     setAnalysisOutput(smoothed, "Polygon Smooth");
   };
   const runBufferAnalysis = () => {
@@ -444,7 +448,7 @@ export function AnalysisPanel({
 
     const parsedRadius = Number.parseFloat(bufferRadius.trim());
     if (!Number.isFinite(parsedRadius)) {
-      setAnalysisError("Buffer radius is invalid.");
+      setAnalysisError(t("analysis.errors.invalidBufferRadius"));
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -456,7 +460,9 @@ export function AnalysisPanel({
         units: bufferUnits as any,
       });
     } catch {
-      setAnalysisError("Buffer calculation failed.");
+      setAnalysisError(
+        t("analysis.errors.calculationFailed", { label: "Buffer" })
+      );
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -469,7 +475,7 @@ export function AnalysisPanel({
   const runVoronoiAnalysis = () => {
     const rawInput = rawGeojson;
     if (!isPointFeatureCollection(rawInput)) {
-      setAnalysisError("Voronoi requires FeatureCollection<Point> input.");
+      setAnalysisError(t("analysis.errors.requiresPoint"));
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -499,14 +505,16 @@ export function AnalysisPanel({
         bbox: bboxValues as any,
       });
     } catch {
-      setAnalysisError("Voronoi calculation failed.");
+      setAnalysisError(
+        t("analysis.errors.calculationFailed", { label: "Voronoi" })
+      );
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
     }
 
     if (!result) {
-      setAnalysisError("Voronoi result is empty.");
+      setAnalysisError(t("analysis.errors.voronoiEmpty"));
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -535,7 +543,9 @@ export function AnalysisPanel({
         highQuality: true,
       });
     } catch {
-      setAnalysisError("Simplify calculation failed.");
+      setAnalysisError(
+        t("analysis.errors.calculationFailed", { label: "Simplify" })
+      );
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -593,7 +603,9 @@ export function AnalysisPanel({
         };
       });
     } catch {
-      setAnalysisError("Measurement calculation failed.");
+      setAnalysisError(
+        t("analysis.errors.calculationFailed", { label: "Measurement" })
+      );
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -606,7 +618,7 @@ export function AnalysisPanel({
 
     setAnalysisActiveTool("Measurement");
     setAnalysisOutput(result, "Measurement");
-    toast.success("Measurement results written to properties.");
+    toast.success(t("analysis.success.measurementAdded"));
   };
 
   const runPointsWithinAnalysis = () => {
@@ -630,9 +642,7 @@ export function AnalysisPanel({
     });
 
     if (points.length === 0 || polygons.length === 0) {
-      setAnalysisError(
-        "Points Within requires both Point and Polygon features."
-      );
+      setAnalysisError(t("analysis.errors.requiresPointAndPolygon"));
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -661,7 +671,9 @@ export function AnalysisPanel({
         polygonCollection as any
       );
     } catch {
-      setAnalysisError("Points Within calculation failed.");
+      setAnalysisError(
+        t("analysis.errors.calculationFailed", { label: "Points Within" })
+      );
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -681,7 +693,7 @@ export function AnalysisPanel({
   const runConcaveAnalysis = () => {
     const rawInput = rawGeojson;
     if (!isPointFeatureCollection(rawInput)) {
-      setAnalysisError("Concave requires FeatureCollection<Point> input.");
+      setAnalysisError(t("analysis.errors.requiresPoint"));
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -705,7 +717,9 @@ export function AnalysisPanel({
         units: concaveUnits as any,
       });
     } catch {
-      setAnalysisError("Concave calculation failed.");
+      setAnalysisError(
+        t("analysis.errors.calculationFailed", { label: "Concave" })
+      );
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -734,7 +748,9 @@ export function AnalysisPanel({
     try {
       result = turfConvex(analysisInput.inputObject);
     } catch {
-      setAnalysisError("Convex calculation failed.");
+      setAnalysisError(
+        t("analysis.errors.calculationFailed", { label: "Convex" })
+      );
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -762,7 +778,7 @@ export function AnalysisPanel({
 
     const features = analysisInput.features;
     if (features.length < 2) {
-      setAnalysisError("Union requires at least 2 polygons.");
+      setAnalysisError(t("analysis.errors.unionRequiresTwo"));
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -775,7 +791,7 @@ export function AnalysisPanel({
     });
 
     if (validPolygons.length < 2) {
-      setAnalysisError("Union requires at least 2 Polygon features.");
+      setAnalysisError(t("analysis.errors.unionRequiresTwo"));
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -828,7 +844,7 @@ export function AnalysisPanel({
 
     const features = analysisInput.features;
     if (features.length < 2) {
-      setAnalysisError("Intersect requires at least 2 polygons.");
+      setAnalysisError(t("analysis.errors.intersectRequiresTwo"));
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -841,7 +857,7 @@ export function AnalysisPanel({
     });
 
     if (validPolygons.length < 2) {
-      setAnalysisError("Intersect requires at least 2 Polygon features.");
+      setAnalysisError(t("analysis.errors.intersectRequiresTwo"));
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -861,7 +877,9 @@ export function AnalysisPanel({
       const collection = turfFeatureCollection(turfFeatures);
       result = turfIntersect(collection as any);
     } catch (err) {
-      setAnalysisError("Intersect calculation failed.");
+      setAnalysisError(
+        t("analysis.errors.calculationFailed", { label: "Intersect" })
+      );
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -889,7 +907,7 @@ export function AnalysisPanel({
 
     const features = analysisInput.features;
     if (features.length < 2) {
-      setAnalysisError("Difference requires at least 2 polygons.");
+      setAnalysisError(t("analysis.errors.differenceRequiresTwo"));
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -902,7 +920,7 @@ export function AnalysisPanel({
     });
 
     if (validPolygons.length < 2) {
-      setAnalysisError("Difference requires at least 2 Polygon features.");
+      setAnalysisError(t("analysis.errors.differenceRequiresTwo"));
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -929,7 +947,9 @@ export function AnalysisPanel({
       // Turf v7 difference(features) takes a FeatureCollection
       result = turfDifference(collection as any);
     } catch (err) {
-      setAnalysisError("Difference calculation failed.");
+      setAnalysisError(
+        t("analysis.errors.calculationFailed", { label: "Difference" })
+      );
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -963,7 +983,7 @@ export function AnalysisPanel({
     });
 
     if (validPoints.length !== 2) {
-      setAnalysisError("Midpoint requires exactly 2 Point features.");
+      setAnalysisError(t("analysis.errors.midpointRequiresTwo"));
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -981,7 +1001,9 @@ export function AnalysisPanel({
     try {
       result = turfMidpoint(turfFeatures[0] as any, turfFeatures[1] as any);
     } catch {
-      setAnalysisError("Midpoint calculation failed.");
+      setAnalysisError(
+        t("analysis.errors.calculationFailed", { label: "Midpoint" })
+      );
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -1012,7 +1034,7 @@ export function AnalysisPanel({
 
     const cellSide = Number.parseFloat(hexGridCellSide.trim());
     if (!Number.isFinite(cellSide) || cellSide <= 0) {
-      setAnalysisError("Invalid cell side value.");
+      setAnalysisError(t("analysis.errors.invalidCellSide"));
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -1037,9 +1059,10 @@ export function AnalysisPanel({
 
     if (estimatedCount > MAX_HEX_COUNT) {
       setAnalysisError(
-        `Grid too dense (> ${Math.round(
-          estimatedCount
-        ).toLocaleString()} cells). Max allowed is ${MAX_HEX_COUNT.toLocaleString()}. Please increase cell size or reduce area.`
+        t("analysis.errors.gridTooDense", {
+          countVal: Math.round(estimatedCount).toLocaleString(),
+          maxVal: MAX_HEX_COUNT.toLocaleString(),
+        })
       );
       setAnalysisResultText("");
       analysisSource?.clear();
@@ -1052,7 +1075,9 @@ export function AnalysisPanel({
         units: hexGridUnits as any,
       });
     } catch (err) {
-      setAnalysisError("Hex Grid calculation failed.");
+      setAnalysisError(
+        t("analysis.errors.calculationFailed", { label: "Hex Grid" })
+      );
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -1092,7 +1117,7 @@ export function AnalysisPanel({
 
     const cellSide = Number.parseFloat(pointGridCellSide.trim());
     if (!Number.isFinite(cellSide) || cellSide <= 0) {
-      setAnalysisError("Invalid cell side value.");
+      setAnalysisError(t("analysis.errors.invalidCellSide"));
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -1117,9 +1142,10 @@ export function AnalysisPanel({
 
     if (estimatedCount > MAX_POINT_COUNT) {
       setAnalysisError(
-        `Grid too dense (> ${Math.round(
-          estimatedCount
-        ).toLocaleString()} points). Max allowed is ${MAX_POINT_COUNT.toLocaleString()}. Please increase cell size or reduce area.`
+        t("analysis.errors.gridTooDense", {
+          countVal: Math.round(estimatedCount).toLocaleString(),
+          maxVal: MAX_POINT_COUNT.toLocaleString(),
+        })
       );
       setAnalysisResultText("");
       analysisSource?.clear();
@@ -1132,7 +1158,9 @@ export function AnalysisPanel({
         units: pointGridUnits as any,
       });
     } catch (err) {
-      setAnalysisError("Point Grid calculation failed.");
+      setAnalysisError(
+        t("analysis.errors.calculationFailed", { label: "Point Grid" })
+      );
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -1172,7 +1200,7 @@ export function AnalysisPanel({
 
     const cellSide = Number.parseFloat(squareGridCellSide.trim());
     if (!Number.isFinite(cellSide) || cellSide <= 0) {
-      setAnalysisError("Invalid cell side value.");
+      setAnalysisError(t("analysis.errors.invalidCellSide"));
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -1197,9 +1225,10 @@ export function AnalysisPanel({
 
     if (estimatedCount > MAX_SQUARE_COUNT) {
       setAnalysisError(
-        `Grid too dense (> ${Math.round(
-          estimatedCount
-        ).toLocaleString()} cells). Max allowed is ${MAX_SQUARE_COUNT.toLocaleString()}. Please increase cell size or reduce area.`
+        t("analysis.errors.gridTooDense", {
+          countVal: Math.round(estimatedCount).toLocaleString(),
+          maxVal: MAX_SQUARE_COUNT.toLocaleString(),
+        })
       );
       setAnalysisResultText("");
       analysisSource?.clear();
@@ -1212,7 +1241,9 @@ export function AnalysisPanel({
         units: squareGridUnits as any,
       });
     } catch (err) {
-      setAnalysisError("Square Grid calculation failed.");
+      setAnalysisError(
+        t("analysis.errors.calculationFailed", { label: "Square Grid" })
+      );
       setAnalysisResultText("");
       analysisSource?.clear();
       return;
@@ -1251,7 +1282,7 @@ export function AnalysisPanel({
         document.body.removeChild(textarea);
       }
       setCopyStatus("success");
-      toast.success("Copied to clipboard");
+      toast.success(t("analysis.labels.copyResult"));
     } catch {
       setCopyStatus("error");
     }
@@ -1279,16 +1310,13 @@ export function AnalysisPanel({
         }
 
         if (featureCount > 10000) {
-          toast.warning(
-            "Large dataset detected. Browser may freeze temporarily while updating.",
-            {
-              duration: 5000,
-            }
-          );
+          toast.warning(t("analysis.labels.largeDataset"), {
+            duration: 5000,
+          });
         }
 
         setGeojsonText(analysisResultText);
-        toast.success("Replaced editor content with analysis result.");
+        toast.success(t("analysis.success.replaced"));
         onClose();
       } catch (e) {
         console.error("Failed to replace content:", e);
@@ -1341,12 +1369,9 @@ export function AnalysisPanel({
         }
 
         if (newFeatures.length > 10000) {
-          toast.warning(
-            "Large dataset detected. Merging may take a few seconds.",
-            {
-              duration: 5000,
-            }
-          );
+          toast.warning(t("analysis.labels.largeDataset"), {
+            duration: 5000,
+          });
         }
 
         const existingJson = rawGeojson;
@@ -1382,7 +1407,7 @@ export function AnalysisPanel({
         };
 
         setGeojsonText(JSON.stringify(merged, null, 2));
-        toast.success("Added analysis result to editor content.");
+        toast.success(t("analysis.success.added"));
         onClose();
       } catch (e) {
         console.error("Failed to add result:", e);
@@ -1399,26 +1424,26 @@ export function AnalysisPanel({
   const analysisTools: AnalysisTool[] = [
     {
       id: "center",
-      name: "Center",
-      description:
-        "Takes a Feature or FeatureCollection and returns the absolute center point of all features.",
+      name: t("analysis.tools.center.name"),
+      description: t("analysis.tools.center.desc"),
       run: runCenterAnalysis,
     },
     {
       id: "bbox",
-      name: "BBox",
-      description:
-        "Calculates the bounding box for any GeoJSON object, using geojson.bbox unless recompute is requested.",
+      name: t("analysis.tools.bbox.name"),
+      description: t("analysis.tools.bbox.desc"),
       run: runBboxAnalysis,
     },
     {
       id: "polygonSmooth",
-      name: "Polygon Smooth",
-      description: "Smooths polygon boundaries with configurable iterations.",
+      name: t("analysis.tools.polygonSmooth.name"),
+      description: t("analysis.tools.polygonSmooth.desc"),
       run: runPolygonSmoothAnalysis,
       renderOptions: (
         <div className="flex items-center gap-2">
-          <span className="text-[10px] text-[#a1a1aa]">Iterations</span>
+          <span className="text-[10px] text-[#a1a1aa]">
+            {t("analysis.labels.iterations")}
+          </span>
           <input
             type="number"
             min={0}
@@ -1431,12 +1456,14 @@ export function AnalysisPanel({
     },
     {
       id: "buffer",
-      name: "Buffer",
-      description: "Calculates a buffer for input features for a given radius.",
+      name: t("analysis.tools.buffer.name"),
+      description: t("analysis.tools.buffer.desc"),
       run: runBufferAnalysis,
       renderOptions: (
         <div className="flex items-center gap-2">
-          <span className="text-[10px] text-[#a1a1aa]">Radius</span>
+          <span className="text-[10px] text-[#a1a1aa]">
+            {t("analysis.labels.radius")}
+          </span>
           <input
             type="number"
             className="w-16 bg-[#0b0b0f] border border-[#27272a] rounded px-2 py-1 text-[#e4e4e7] text-xs focus:outline-none focus:ring-2 focus:ring-[#3b82f6]/50 no-spinner"
@@ -1448,32 +1475,33 @@ export function AnalysisPanel({
             value={bufferUnits}
             onChange={(event) => setBufferUnits(event.target.value)}
           >
-            <option value="meters">meters</option>
-            <option value="kilometers">kilometers</option>
-            <option value="inches">inches</option>
+            <option value="meters">{t("analysis.meters")}</option>
+            <option value="kilometers">{t("analysis.kilometers")}</option>
+            <option value="inches">{t("analysis.inches")}</option>
           </select>
         </div>
       ),
     },
     {
       id: "voronoi",
-      name: "Voronoi",
-      description: "Creates Voronoi polygons from input points.",
+      name: t("analysis.tools.voronoi.name"),
+      description: t("analysis.tools.voronoi.desc"),
       run: runVoronoiAnalysis,
       disabled: !concaveEnabled,
       disabledReason: concaveEnabled
         ? undefined
-        : "Requires FeatureCollection<Point> input.",
+        : t("analysis.errors.requiresPoint"),
     },
     {
       id: "simplify",
-      name: "Simplify",
-      description:
-        "Simplifies geometry by removing vertices using Ramer-Douglas-Peucker algorithm.",
+      name: t("analysis.tools.simplify.name"),
+      description: t("analysis.tools.simplify.desc"),
       run: runSimplifyAnalysis,
       renderOptions: (
         <div className="flex items-center gap-2">
-          <span className="text-[10px] text-[#a1a1aa]">Tolerance</span>
+          <span className="text-[10px] text-[#a1a1aa]">
+            {t("analysis.labels.tolerance")}
+          </span>
           <input
             type="number"
             step="0.001"
@@ -1486,17 +1514,18 @@ export function AnalysisPanel({
     },
     {
       id: "concave",
-      name: "Concave",
-      description:
-        "Takes a set of points and returns a concave hull Polygon or MultiPolygon.",
+      name: t("analysis.tools.concave.name"),
+      description: t("analysis.tools.concave.desc"),
       run: runConcaveAnalysis,
       disabled: !concaveEnabled,
       disabledReason: concaveEnabled
         ? undefined
-        : "Requires FeatureCollection<Point> input.",
+        : t("analysis.errors.requiresPoint"),
       renderOptions: (
         <div className="flex items-center gap-2">
-          <span className="text-[10px] text-[#a1a1aa]">Max Edge</span>
+          <span className="text-[10px] text-[#a1a1aa]">
+            {t("analysis.labels.maxEdge")}
+          </span>
           <input
             type="number"
             className="w-16 bg-[#0b0b0f] border border-[#27272a] rounded px-2 py-1 text-[#e4e4e7] text-xs focus:outline-none focus:ring-2 focus:ring-[#3b82f6]/50 no-spinner"
@@ -1508,38 +1537,38 @@ export function AnalysisPanel({
             value={concaveUnits}
             onChange={(event) => setConcaveUnits(event.target.value)}
           >
-            <option value="meters">meters</option>
-            <option value="kilometers">kilometers</option>
-            <option value="inches">inches</option>
+            <option value="meters">{t("analysis.meters")}</option>
+            <option value="kilometers">{t("analysis.kilometers")}</option>
+            <option value="inches">{t("analysis.inches")}</option>
           </select>
         </div>
       ),
     },
     {
       id: "union",
-      name: "Union",
-      description: "Combines two or more polygons into a single polygon.",
+      name: t("analysis.tools.union.name"),
+      description: t("analysis.tools.union.desc"),
       run: runUnionAnalysis,
       disabled: polygonCount < 2,
       disabledReason:
-        polygonCount < 2 ? "Requires at least 2 Polygon features." : undefined,
+        polygonCount < 2 ? t("analysis.errors.unionRequiresTwo") : undefined,
     },
     {
       id: "intersect",
-      name: "Intersect",
-      description:
-        "Takes a set of polygons and returns their common intersection area.",
+      name: t("analysis.tools.intersect.name"),
+      description: t("analysis.tools.intersect.desc"),
       run: runIntersectAnalysis,
     },
     {
       id: "difference",
-      name: "Difference",
-      description:
-        "Finds the difference by clipping subsequent polygons from the first.",
+      name: t("analysis.tools.difference.name"),
+      description: t("analysis.tools.difference.desc"),
       run: runDifferenceAnalysis,
       disabled: polygonCount !== 2,
       disabledReason:
-        polygonCount !== 2 ? "Requires exactly 2 Polygon features." : undefined,
+        polygonCount !== 2
+          ? t("analysis.errors.differenceRequiresTwo")
+          : undefined,
       renderOptions: (
         <button
           className={`flex items-center gap-1 px-2 py-0.5 rounded text-[10px] border ${
@@ -1557,39 +1586,40 @@ export function AnalysisPanel({
     },
     {
       id: "midpoint",
-      name: "Midpoint",
-      description: "takes two points and returns a point midway between them.",
+      name: t("analysis.tools.midpoint.name"),
+      description: t("analysis.tools.midpoint.desc"),
       run: runMidpointAnalysis,
       disabled: pointCount !== 2,
       disabledReason:
-        pointCount !== 2 ? "Requires exactly 2 Point features." : undefined,
+        pointCount !== 2 ? t("analysis.errors.midpointRequiresTwo") : undefined,
     },
     {
       id: "measurement",
-      name: "Measurement",
-      description:
-        "Adds Area (sqm/sqkm) and Length (m/km) properties to features.",
+      name: t("analysis.tools.measurement.name"),
+      description: t("analysis.tools.measurement.desc"),
       run: runMeasurementAnalysis,
     },
     {
       id: "pointsWithin",
-      name: "Points Within",
-      description: "Finds points that fall within the supplied polygons.",
+      name: t("analysis.tools.pointsWithin.name"),
+      description: t("analysis.tools.pointsWithin.desc"),
       run: runPointsWithinAnalysis,
       disabled: pointCount === 0 || polygonCount === 0,
       disabledReason:
         pointCount === 0 || polygonCount === 0
-          ? "Requires both Point and Polygon features."
+          ? t("analysis.errors.requiresPointAndPolygon")
           : undefined,
     },
     {
       id: "hexGrid",
-      name: "Hex Grid",
-      description: "Generates a hexagonal grid within the bounding box.",
+      name: t("analysis.tools.hexGrid.name"),
+      description: t("analysis.tools.hexGrid.desc"),
       run: runHexGridAnalysis,
       renderOptions: (
         <div className="flex items-center gap-2">
-          <span className="text-[10px] text-[#a1a1aa]">Cell Side</span>
+          <span className="text-[10px] text-[#a1a1aa]">
+            {t("analysis.labels.cellSide")}
+          </span>
           <input
             type="number"
             className="w-16 bg-[#0b0b0f] border border-[#27272a] rounded px-2 py-1 text-[#e4e4e7] text-xs focus:outline-none focus:ring-2 focus:ring-[#3b82f6]/50 no-spinner"
@@ -1610,12 +1640,14 @@ export function AnalysisPanel({
     },
     {
       id: "pointGrid",
-      name: "Point Grid",
-      description: "Generates a point grid within the bounding box.",
+      name: t("analysis.tools.pointGrid.name"),
+      description: t("analysis.tools.pointGrid.desc"),
       run: runPointGridAnalysis,
       renderOptions: (
         <div className="flex items-center gap-2">
-          <span className="text-[10px] text-[#a1a1aa]">Cell Side</span>
+          <span className="text-[10px] text-[#a1a1aa]">
+            {t("analysis.labels.cellSide")}
+          </span>
           <input
             type="number"
             className="w-16 bg-[#0b0b0f] border border-[#27272a] rounded px-2 py-1 text-[#e4e4e7] text-xs focus:outline-none focus:ring-2 focus:ring-[#3b82f6]/50 no-spinner"
@@ -1627,21 +1659,23 @@ export function AnalysisPanel({
             value={pointGridUnits}
             onChange={(event) => setPointGridUnits(event.target.value)}
           >
-            <option value="meters">meters</option>
-            <option value="kilometers">kilometers</option>
-            <option value="miles">miles</option>
+            <option value="meters">{t("analysis.meters")}</option>
+            <option value="kilometers">{t("analysis.kilometers")}</option>
+            <option value="miles">{t("analysis.miles")}</option>
           </select>
         </div>
       ),
     },
     {
       id: "squareGrid",
-      name: "Square Grid",
-      description: "Generates a square grid within the bounding box.",
+      name: t("analysis.tools.squareGrid.name"),
+      description: t("analysis.tools.squareGrid.desc"),
       run: runSquareGridAnalysis,
       renderOptions: (
         <div className="flex items-center gap-2">
-          <span className="text-[10px] text-[#a1a1aa]">Cell Side</span>
+          <span className="text-[10px] text-[#a1a1aa]">
+            {t("analysis.labels.cellSide")}
+          </span>
           <input
             type="number"
             className="w-16 bg-[#0b0b0f] border border-[#27272a] rounded px-2 py-1 text-[#e4e4e7] text-xs focus:outline-none focus:ring-2 focus:ring-[#3b82f6]/50 no-spinner"
@@ -1653,18 +1687,17 @@ export function AnalysisPanel({
             value={squareGridUnits}
             onChange={(event) => setSquareGridUnits(event.target.value)}
           >
-            <option value="meters">meters</option>
-            <option value="kilometers">kilometers</option>
-            <option value="miles">miles</option>
+            <option value="meters">{t("analysis.meters")}</option>
+            <option value="kilometers">{t("analysis.kilometers")}</option>
+            <option value="miles">{t("analysis.miles")}</option>
           </select>
         </div>
       ),
     },
     {
       id: "convex",
-      name: "Convex",
-      description:
-        "Takes a Feature or FeatureCollection and returns a convex hull Polygon.",
+      name: t("analysis.tools.convex.name"),
+      description: t("analysis.tools.convex.desc"),
       run: runConvexAnalysis,
     },
   ];
@@ -1677,7 +1710,7 @@ export function AnalysisPanel({
     <div className="absolute z-10" style={{ top: 16, right: 72 }}>
       <div className="w-[400px] bg-[#18181b] border border-[#27272a] rounded-lg shadow-lg p-4 text-[#e4e4e7]">
         <div className="flex items-center justify-between">
-          <span className="text-sm">Spatial Analysis</span>
+          <span className="text-sm">{t("analysis.title")}</span>
           <button
             className="p-1 text-[#a1a1aa] hover:text-[#e4e4e7] hover:bg-[#27272a] rounded transition-colors"
             onClick={onClose}
@@ -1688,27 +1721,29 @@ export function AnalysisPanel({
           </button>
         </div>
 
-        <div className="text-xs text-[#a1a1aa] mt-0.5">
-          Input: {analysisInputLabel}
-          {geojsonMode === "geometry" ? " (wrapped as Feature)" : ""}
+        <div className="text-xs text-[#a1a1aa] mt-3">
+          {t("analysis.labels.input")}: {analysisInputLabel}
+          {geojsonMode === "geometry"
+            ? ` (${t("analysis.inputs.feature")})`
+            : ""}
         </div>
 
-        <div className="relative mt-2 mb-2">
+        <div className="relative mt-3 mb-3">
           <input
             type="text"
-            placeholder="Search tools..."
+            placeholder={t("analysis.labels.searchTools")}
             className="w-full bg-[#0b0b0f] border border-[#27272a] rounded-md px-3 py-1.5 text-xs text-[#e4e4e7] placeholder-[#52525b] focus:outline-none focus:ring-1 focus:ring-[#3b82f6]"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
 
-        <div className="h-px bg-[#27272a] my-1"></div>
+        <div className="h-px bg-[#27272a] my-3"></div>
 
         <div className="flex flex-col gap-3">
           <div
             className="flex flex-col gap-2 overflow-auto property-scrollbar"
-            style={{ maxHeight: 220 }}
+            style={{ maxHeight: 400 }}
           >
             {analysisTools
               .filter((tool) =>
@@ -1740,7 +1775,7 @@ export function AnalysisPanel({
                     onClick={tool.run}
                     disabled={tool.disabled}
                   >
-                    Run
+                    {t("analysis.labels.run")}
                   </button>
                 </div>
               ))}
@@ -1752,7 +1787,7 @@ export function AnalysisPanel({
 
           <div className="flex items-center justify-between">
             <div className="text-xs text-[#a1a1aa]">
-              Result (GeoJSON)
+              {t("analysis.labels.result")}
               {analysisActiveTool ? ` · ${analysisActiveTool}` : ""}
             </div>
             {analysisResultText && (
@@ -1761,12 +1796,12 @@ export function AnalysisPanel({
                 onClick={handleCopy}
                 title={
                   copyStatus === "success"
-                    ? "Copied"
+                    ? t("analysis.labels.copyResult")
                     : copyStatus === "error"
-                    ? "Copy failed"
-                    : "Copy"
+                    ? t("editor.copyFail")
+                    : t("analysis.labels.copyResult")
                 }
-                aria-label="Copy"
+                aria-label={t("analysis.labels.copyResult")}
               >
                 <Copy className="w-3.5 h-3.5" />
               </button>
@@ -1777,8 +1812,8 @@ export function AnalysisPanel({
                   className="p-1 text-[#a1a1aa] hover:text-[#e4e4e7] hover:bg-[#27272a] rounded transition-colors"
                   onClick={handleReplace}
                   disabled={isProcessing}
-                  title="Replace editor content"
-                  aria-label="Replace"
+                  title={t("analysis.labels.replace")}
+                  aria-label={t("analysis.labels.replace")}
                 >
                   {isProcessing ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -1790,8 +1825,8 @@ export function AnalysisPanel({
                   className="p-1 text-[#a1a1aa] hover:text-[#e4e4e7] hover:bg-[#27272a] rounded transition-colors"
                   onClick={handleAdd}
                   disabled={isProcessing}
-                  title="Add to editor content"
-                  aria-label="Add"
+                  title={t("analysis.labels.addToMap")}
+                  aria-label={t("analysis.labels.addToMap")}
                 >
                   {isProcessing ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -1803,8 +1838,8 @@ export function AnalysisPanel({
                   className="p-1 text-[#a1a1aa] hover:text-[#e4e4e7] hover:bg-[#27272a] rounded transition-colors"
                   onClick={handleExport}
                   disabled={isProcessing}
-                  title="Export result"
-                  aria-label="Export"
+                  title={t("export.title")}
+                  aria-label={t("export.title")}
                 >
                   <Download className="w-3.5 h-3.5" />
                 </button>
@@ -1813,7 +1848,7 @@ export function AnalysisPanel({
           </div>
           <div
             className="bg-[#0b0b0f] border border-[#27272a] rounded-lg overflow-hidden"
-            style={{ height: 180 }}
+            style={{ height: 200 }}
           >
             <Editor
               value={analysisResultText}

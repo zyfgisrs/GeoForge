@@ -1,0 +1,280 @@
+{
+  "common": {
+    "import": "导入",
+    "export": "导出",
+    "cancel": "取消",
+    "confirm": "确认",
+    "save": "保存",
+    "delete": "删除",
+    "close": "关闭",
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "copy": "复制",
+    "paste": "粘贴",
+    "clear": "清空",
+    "reset": "重置",
+    "apply": "应用",
+    "search": "搜索",
+    "noData": "暂无数据",
+    "features": "要素",
+    "feature": "要素"
+  },
+  "header": {
+    "import": "导入",
+    "export": "导出"
+  },
+  "editor": {
+    "title": "编辑器",
+    "geojson": "GeoJSON",
+    "wkt": "WKT",
+    "table": "表格",
+    "collection": "要素集合",
+    "elements": "单个要素",
+    "format": "格式化",
+    "validate": "验证",
+    "validJson": "有效的 GeoJSON",
+    "invalidJson": "无效的 JSON 格式",
+    "loadContent": "仍然加载",
+    "largeFile": "文件较大，可能影响性能",
+    "lineCount": "行",
+    "charCount": "字符",
+    "copySuccess": "已复制到剪贴板",
+    "copyFail": "复制失败",
+    "clearAllTitle": "清空所有数据？",
+    "clearAllDesc": "这将清空编辑器内容并重置为空 GeoJSON。",
+    "dataTooLarge": "数据过大无法预览",
+    "dataLargeDesc": "内容包含 {{length}} 个字符 ({{size}} MB)。预览可能会导致浏览器卡顿。"
+  },
+  "analysis": {
+    "title": "分析工具",
+    "buffer": "缓冲区分析",
+    "union": "合并",
+    "intersection": "相交",
+    "difference": "差异",
+    "dissolve": "融合",
+    "simplify": "简化",
+    "convexHull": "凸包",
+    "centroid": "质心",
+    "area": "面积",
+    "length": "长度",
+    "distance": "距离",
+    "bufferRadius": "缓冲区半径",
+    "units": "单位",
+    "meters": "米",
+    "kilometers": "千米",
+    "miles": "英里",
+    "feet": "英尺",
+    "inches": "英寸",
+    "inputs": {
+      "featureCollection": "要素集合",
+      "feature": "要素",
+      "geometry": "几何"
+    },
+    "errors": {
+      "noInput": "无 GeoJSON 输入",
+      "invalidJson": "无效的 GeoJSON",
+      "noFeatures": "未找到要素",
+      "emptyResult": "{{label}} 结果为空",
+      "calculationFailed": "{{label}} 计算失败",
+      "invalidBufferRadius": "缓冲区半径无效",
+      "invalidSmoothIterations": "平滑迭代次数无效",
+      "requiresPolygon": "需要多边形或多重多边形输入",
+      "requiresPoint": "需要点要素输入",
+      "requiresPointAndPolygon": "需要同时提供点和多边形要素",
+      "unionRequiresTwo": "合并操作至少需要 2 个多边形",
+      "intersectRequiresTwo": "相交操作至少需要 2 个多边形",
+      "differenceRequiresTwo": "差异操作至少需要 2 个多边形",
+      "midpointRequiresTwo": "中点操作需要正好 2 个点要素",
+      "voronoiEmpty": "Voronoi 结果为空",
+      "gridTooDense": "网格过密 (> {{countVal}} 个单元)。最大允许 {{maxVal}}。请增大单元尺寸或减小区域。",
+      "invalidCellSide": "单元边长无效"
+    },
+    "success": {
+      "measurementAdded": "测量结果已写入属性",
+      "replaced": "已用分析结果替换编辑器内容",
+      "added": "已将分析结果添加到编辑器内容"
+    },
+    "tools": {
+      "center": {
+        "name": "中心点",
+        "desc": "计算要素或要素集合的绝对中心点。"
+      },
+      "bbox": {
+        "name": "边界框",
+        "desc": "计算 GeoJSON 对象的边界框。"
+      },
+      "polygonSmooth": {
+        "name": "多边形平滑",
+        "desc": "使用可配置的迭代次数平滑多边形边界。"
+      },
+      "buffer": {
+        "name": "缓冲区",
+        "desc": "计算输入要素指定半径的缓冲区。"
+      },
+      "voronoi": {
+        "name": "泰森多边形",
+        "desc": "从输入点创建泰森多边形。"
+      },
+      "simplify": {
+        "name": "简化",
+        "desc": "使用 Ramer-Douglas-Peucker 算法移除顶点以简化几何。"
+      },
+      "concave": {
+        "name": "凹包",
+        "desc": "基于点集生成凹包多边形。"
+      },
+      "union": {
+        "name": "合并",
+        "desc": "将两个或更多多边形合并为一个多边形。"
+      },
+      "intersect": {
+        "name": "相交",
+        "desc": "获取一组多边形的公共相交区域。"
+      },
+      "difference": {
+        "name": "差异",
+        "desc": "计算第一个多边形减去后续多边形的差异部分。"
+      },
+      "midpoint": {
+        "name": "中点",
+        "desc": "计算两点之间的中点。"
+      },
+      "measurement": {
+        "name": "测量",
+        "desc": "添加面积 (sqm/sqkm) 和长度 (m/km) 属性到要素。"
+      },
+      "pointsWithin": {
+        "name": "点在多边形内",
+        "desc": "查找落在指定多边形内的点。"
+      },
+      "hexGrid": {
+        "name": "六边形网格",
+        "desc": "在边界框内生成六边形网格。"
+      },
+      "pointGrid": {
+        "name": "点网格",
+        "desc": "在边界框内生成点网格。"
+      },
+      "squareGrid": {
+        "name": "方形网格",
+        "desc": "在边界框内生成方形网格。"
+      },
+      "convex": {
+        "name": "凸包",
+        "desc": "计算输入要素的凸包。"
+      }
+    },
+    "labels": {
+      "iterations": "迭代次数",
+      "radius": "半径",
+      "tolerance": "容差",
+      "maxEdge": "最大边长",
+      "cellSide": "单元边长",
+      "replace": "替换内容",
+      "addToMap": "添加到地图",
+      "copyResult": "复制结果",
+      "searchTools": "搜索工具...",
+      "largeDataset": "检测到大数据集。浏览器可能会暂时卡顿。",
+      "merging": "正在合并...",
+      "run": "运行",
+      "result": "结果 (GeoJSON)",
+      "input": "输入"
+    }
+  },
+  "footerUI": {
+    "projection": "投影",
+    "coordinates": "坐标",
+    "zoom": "缩放级别",
+    "scale": "比例尺",
+    "featuresCount": "{{count}} 个要素",
+    "mousePosition": "纬度: {{lat}}, 经度: {{lng}}",
+    "mousePositionXY": "X: {{x}}, Y: {{y}}"
+  },
+  "map": {
+    "drawing": {
+      "point": "绘制点",
+      "line": "绘制线",
+      "polygon": "绘制多边形",
+      "rectangle": "绘制矩形",
+      "delete": "删除选中",
+      "modeActive": "绘制模式已激活。按 Esc 退出。"
+    },
+    "navigation": {
+      "zoomIn": "放大",
+      "zoomOut": "缩小",
+      "resetNorth": "重置正北"
+    },
+    "measure": {
+      "distance": "测量距离",
+      "area": "测量面积"
+    },
+    "snapshot": "地图快照",
+    "search": "搜索地点...",
+    "properties": {
+      "title": "属性",
+      "noProperties": "无属性",
+      "add": "添加属性",
+      "cancel": "取消",
+      "save": "保存",
+      "selected": "已选中。双击或右键点击编辑属性。按 Esc 取消选择。",
+      "key": "键",
+      "value": "值",
+      "remove": "移除"
+    },
+    "baseMap": {
+      "switch": "切换底图",
+      "osm": "OpenStreetMap",
+      "cartoLight": "CartoDB 浅色",
+      "cartoDark": "CartoDB 深色",
+      "satellite": "卫星图"
+    }
+  },
+  "export": {
+    "title": "导出",
+    "description": "以多种格式导出您的 GeoJSON 数据",
+    "format": "格式",
+    "filename": "文件名",
+    "coordinateSystem": "坐标系",
+    "locked": "已锁定",
+    "download": "下载",
+    "error": {
+      "invalid": "无效的 GeoJSON 数据",
+      "noFeatures": "无可导出的要素",
+      "failed": "导出失败",
+      "shpFailed": "生成 Shapefile 失败"
+    },
+    "success": "导出成功"
+  },
+  "import": {
+    "title": "导入数据",
+    "description": "上传 GeoJSON, Shapefile 或 WKT 文件",
+    "dragDrop": "拖拽文件到此处",
+    "or": "或",
+    "browse": "浏览文件",
+    "supportedFormats": "支持的格式",
+    "options": "导入选项",
+    "replace": "替换现有要素",
+    "importBtn": "导入",
+    "error": {
+      "unsupported": "不支持的文件格式。请上传 GeoJSON, Shapefile (ZIP), 或 WKT (TXT) 文件。",
+      "invalid": "无效的 GeoJSON 文件。",
+      "failed": "读取文件失败。"
+    }
+  },
+  "language": {
+    "zh": "中文 (简体)",
+    "zh-TW": "中文 (繁体)",
+    "en": "English",
+    "ko": "韩语",
+    "ja": "日语",
+    "fr": "法语",
+    "es": "西班牙语"
+  },
+  "footer_coordinates_v2": "纬度: {{lat}}, 经度: {{lng}}",
+  "footer_coordinates_xy_v2": "X: {{x}}, Y: {{y}}",
+  "footer_lbl_lat": "纬度",
+  "footer_lbl_lng": "经度",
+  "footer_lbl_x": "X",
+  "footer_lbl_y": "Y"
+}

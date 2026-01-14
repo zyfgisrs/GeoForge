@@ -1,0 +1,280 @@
+{
+  "common": {
+    "import": "Import",
+    "export": "Export",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "close": "Close",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "copy": "Copy",
+    "paste": "Paste",
+    "clear": "Clear",
+    "reset": "Reset",
+    "apply": "Apply",
+    "search": "Search",
+    "noData": "No data",
+    "features": "Features",
+    "feature": "Feature"
+  },
+  "header": {
+    "import": "Import",
+    "export": "Export"
+  },
+  "editor": {
+    "title": "Editor",
+    "geojson": "GeoJSON",
+    "wkt": "WKT",
+    "table": "Table",
+    "collection": "Collection",
+    "elements": "Elements",
+    "format": "Format",
+    "validate": "Validate",
+    "validJson": "Valid GeoJSON",
+    "invalidJson": "Invalid JSON format",
+    "loadContent": "Load Anyway",
+    "largeFile": "Large file may affect performance",
+    "lineCount": "Lines",
+    "charCount": "Characters",
+    "copySuccess": "Copied to clipboard",
+    "copyFail": "Copy failed",
+    "clearAllTitle": "Clear all data?",
+    "clearAllDesc": "This will clear the editor content and reset it to an empty GeoJSON.",
+    "dataTooLarge": "Data too large for preview",
+    "dataLargeDesc": "The content is {{length}} characters ({{size}} MB). Previewing it may freeze the browser."
+  },
+  "analysis": {
+    "title": "Analysis Tools",
+    "buffer": "Buffer Analysis",
+    "union": "Union",
+    "intersection": "Intersection",
+    "difference": "Difference",
+    "dissolve": "Dissolve",
+    "simplify": "Simplify",
+    "convexHull": "Convex Hull",
+    "centroid": "Centroid",
+    "area": "Area",
+    "length": "Length",
+    "distance": "Distance",
+    "bufferRadius": "Buffer Radius",
+    "units": "Units",
+    "meters": "Meters",
+    "kilometers": "Kilometers",
+    "miles": "Miles",
+    "feet": "Feet",
+    "inches": "Inches",
+    "inputs": {
+      "featureCollection": "FeatureCollection",
+      "feature": "Feature",
+      "geometry": "Geometry"
+    },
+    "errors": {
+      "noInput": "No GeoJSON input.",
+      "invalidJson": "Invalid GeoJSON.",
+      "noFeatures": "No features found.",
+      "emptyResult": "{{label}} result is empty.",
+      "calculationFailed": "{{label}} calculation failed.",
+      "invalidBufferRadius": "Buffer radius is invalid.",
+      "invalidSmoothIterations": "Polygon Smooth iterations invalid.",
+      "requiresPolygon": "Requires Polygon or MultiPolygon input.",
+      "requiresPoint": "Requires Point input.",
+      "requiresPointAndPolygon": "Requires both Point and Polygon features.",
+      "unionRequiresTwo": "Union requires at least 2 polygons.",
+      "intersectRequiresTwo": "Intersect requires at least 2 polygons.",
+      "differenceRequiresTwo": "Difference requires at least 2 polygons.",
+      "midpointRequiresTwo": "Midpoint requires exactly 2 Point features.",
+      "voronoiEmpty": "Voronoi result is empty.",
+      "gridTooDense": "Grid too dense (> {{countVal}} cells). Max allowed is {{maxVal}}. Please increase cell size or reduce area.",
+      "invalidCellSide": "Invalid cell side value."
+    },
+    "success": {
+      "measurementAdded": "Measurement results written to properties.",
+      "replaced": "Replaced editor content with analysis result.",
+      "added": "Added analysis result to editor content."
+    },
+    "tools": {
+      "center": {
+        "name": "Center",
+        "desc": "Takes a Feature or FeatureCollection and returns the absolute center point of all features."
+      },
+      "bbox": {
+        "name": "BBox",
+        "desc": "Calculates the bounding box for any GeoJSON object."
+      },
+      "polygonSmooth": {
+        "name": "Polygon Smooth",
+        "desc": "Smooths polygon boundaries with configurable iterations."
+      },
+      "buffer": {
+        "name": "Buffer",
+        "desc": "Calculates a buffer for input features for a given radius."
+      },
+      "voronoi": {
+        "name": "Voronoi",
+        "desc": "Creates Voronoi polygons from input points."
+      },
+      "simplify": {
+        "name": "Simplify",
+        "desc": "Simplifies geometry by removing vertices using Ramer-Douglas-Peucker algorithm."
+      },
+      "concave": {
+        "name": "Concave",
+        "desc": "Takes a set of points and returns a concave hull Polygon or MultiPolygon."
+      },
+      "union": {
+        "name": "Union",
+        "desc": "Combines two or more polygons into a single polygon."
+      },
+      "intersect": {
+        "name": "Intersect",
+        "desc": "Takes a set of polygons and returns their common intersection area."
+      },
+      "difference": {
+        "name": "Difference",
+        "desc": "Finds the difference by clipping subsequent polygons from the first."
+      },
+      "midpoint": {
+        "name": "Midpoint",
+        "desc": "Takes two points and returns a point midway between them."
+      },
+      "measurement": {
+        "name": "Measurement",
+        "desc": "Adds Area (sqm/sqkm) and Length (m/km) properties to features."
+      },
+      "pointsWithin": {
+        "name": "Points Within",
+        "desc": "Finds points that fall within the supplied polygons."
+      },
+      "hexGrid": {
+        "name": "Hex Grid",
+        "desc": "Generates a hexagonal grid within the bounding box."
+      },
+      "pointGrid": {
+        "name": "Point Grid",
+        "desc": "Generates a point grid within the bounding box."
+      },
+      "squareGrid": {
+        "name": "Square Grid",
+        "desc": "Generates a square grid within the bounding box."
+      },
+      "convex": {
+        "name": "Convex Hull",
+        "desc": "Calculates the convex hull of the input features."
+      }
+    },
+    "labels": {
+      "iterations": "Iterations",
+      "radius": "Radius",
+      "tolerance": "Tolerance",
+      "maxEdge": "Max Edge",
+      "cellSide": "Cell Side",
+      "replace": "Replace Content",
+      "addToMap": "Add to Map",
+      "copyResult": "Copy Result",
+      "searchTools": "Search tools...",
+      "largeDataset": "Large dataset detected. Browser may freeze temporarily while updating.",
+      "merging": "Merging...",
+      "run": "Run",
+      "result": "Result (GeoJSON)",
+      "input": "Input"
+    }
+  },
+  "footerUI": {
+    "projection": "Projection",
+    "coordinates": "Coordinates",
+    "zoom": "Zoom Level",
+    "scale": "Scale",
+    "featuresCount": "{{count}} Features",
+    "mousePosition": "Lat: {{lat}}, Lng: {{lng}}",
+    "mousePositionXY": "X: {{x}}, Y: {{y}}"
+  },
+  "map": {
+    "drawing": {
+      "point": "Draw Point",
+      "line": "Draw Line",
+      "polygon": "Draw Polygon",
+      "rectangle": "Draw Rectangle",
+      "delete": "Delete Selected",
+      "modeActive": "Drawing mode active. Press Esc to exit."
+    },
+    "navigation": {
+      "zoomIn": "Zoom In",
+      "zoomOut": "Zoom Out",
+      "resetNorth": "Reset North"
+    },
+    "measure": {
+      "distance": "Measure Distance",
+      "area": "Measure Area"
+    },
+    "snapshot": "Map Snapshot",
+    "search": "Search location...",
+    "properties": {
+      "title": "Properties",
+      "noProperties": "No properties",
+      "add": "Add property",
+      "cancel": "Cancel",
+      "save": "Save",
+      "selected": "Selected. Double-click or right-click to edit properties. Esc to deselect.",
+      "key": "key",
+      "value": "value",
+      "remove": "Remove"
+    },
+    "baseMap": {
+      "switch": "Switch Base Map",
+      "osm": "OpenStreetMap",
+      "cartoLight": "CartoDB Light",
+      "cartoDark": "CartoDB Dark",
+      "satellite": "Satellite"
+    }
+  },
+  "export": {
+    "title": "Export",
+    "description": "Export your GeoJSON data in various formats",
+    "format": "Format",
+    "filename": "File Name",
+    "coordinateSystem": "Coordinate System",
+    "locked": "Locked",
+    "download": "Download",
+    "error": {
+      "invalid": "Invalid GeoJSON data",
+      "noFeatures": "No features to export",
+      "failed": "Export failed",
+      "shpFailed": "Failed to generate Shapefile"
+    },
+    "success": "Export successful"
+  },
+  "import": {
+    "title": "Import Data",
+    "description": "Upload GeoJSON, Shapefile, or WKT files",
+    "dragDrop": "Drag and drop your file here",
+    "or": "or",
+    "browse": "Browse Files",
+    "supportedFormats": "Supported Formats",
+    "options": "Import Options",
+    "replace": "Replace existing features",
+    "importBtn": "Import",
+    "error": {
+      "unsupported": "Unsupported file format. Please upload a GeoJSON, Shapefile (ZIP), or WKT (TXT) file.",
+      "invalid": "Invalid GeoJSON file.",
+      "failed": "Failed to read file."
+    }
+  },
+  "language": {
+    "zh": "Chinese (Simplified)",
+    "zh-TW": "Chinese (Traditional)",
+    "en": "English",
+    "ko": "Korean",
+    "ja": "Japanese",
+    "fr": "French",
+    "es": "Spanish"
+  },
+  "footer_coordinates_v2": "Lat: {{lat}}, Lng: {{lng}}",
+  "footer_coordinates_xy_v2": "X: {{x}}, Y: {{y}}",
+  "footer_lbl_lat": "Lat",
+  "footer_lbl_lng": "Lng",
+  "footer_lbl_x": "X",
+  "footer_lbl_y": "Y"
+}

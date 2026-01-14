@@ -229,6 +229,8 @@ type GeoJSONStore = {
   setWktText: (text: string) => void;
   setWktDisplayMode: (mode: WktDisplayMode) => void;
   setSelectedProjection: (projection: string) => void;
+  cursorLocation: { x: number; y: number } | null;
+  setCursorLocation: (location: { x: number; y: number } | null) => void;
 };
 
 const defaultProjection = "EPSG:4326";
@@ -336,4 +338,6 @@ export const useGeojsonStore = create<GeoJSONStore>((set) => ({
         wktText: nextWkt === null ? state.wktText : nextWkt,
       };
     }),
+  cursorLocation: null,
+  setCursorLocation: (location) => set({ cursorLocation: location }),
 }));

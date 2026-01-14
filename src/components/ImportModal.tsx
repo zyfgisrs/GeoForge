@@ -7,6 +7,7 @@ import {
   X,
 } from "lucide-react";
 import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import shp from "shpjs";
 import { useGeojsonStore } from "../store/geojsonStore";
 
@@ -16,6 +17,7 @@ interface ImportModalProps {
 }
 
 export function ImportModal({ isOpen, onClose }: ImportModalProps) {
+  const { t } = useTranslation();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -52,9 +54,7 @@ export function ImportModal({ isOpen, onClose }: ImportModalProps) {
     );
 
     if (!isSupported) {
-      setError(
-        "Unsupported file format. Please upload a GeoJSON, Shapefile (ZIP), or WKT (TXT) file."
-      );
+      setError(t("import.error.unsupported"));
       setSelectedFile(null);
       return;
     }
@@ -105,8 +105,9 @@ export function ImportModal({ isOpen, onClose }: ImportModalProps) {
             JSON.parse(text); // Validate JSON
             setGeojsonText(text);
             onClose();
+            onClose();
           } catch (e) {
-            setError("Invalid GeoJSON file.");
+            setError(t("import.error.invalid"));
           }
         } else if (extension === ".wkt" || extension === ".txt") {
           setWktText(text);
@@ -126,10 +127,10 @@ export function ImportModal({ isOpen, onClose }: ImportModalProps) {
           setGeojsonText(JSON.stringify(finalGeoJSON, null, 2));
           onClose();
         } else {
-          setError("Unsupported file type.");
+          setError(t("import.error.unsupported"));
         }
       } catch (err) {
-        setError("Failed to read file.");
+        setError(t("import.error.failed"));
       }
     }
   };
@@ -162,9 +163,11 @@ export function ImportModal({ isOpen, onClose }: ImportModalProps) {
 
             {/* Title and Description */}
             <div className="flex-1">
-              <h2 className="text-[#e4e4e7] text-xl mb-1">Import Data</h2>
+              <h2 className="text-[#e4e4e7] text-xl mb-1">
+                {t("import.title")}
+              </h2>
               <p className="text-[#a1a1aa] text-sm">
-                Upload GeoJSON, Shapefile, or WKT files
+                {t("import.description")}
               </p>
             </div>
 
@@ -224,13 +227,13 @@ export function ImportModal({ isOpen, onClose }: ImportModalProps) {
                 </div>
               ) : (
                 <div className="text-center space-y-2">
-                  <p className="text-[#e4e4e7]">Drag and drop your file here</p>
-                  <p className="text-[#a1a1aa] text-sm">or</p>
+                  <p className="text-[#e4e4e7]">{t("import.dragDrop")}</p>
+                  <p className="text-[#a1a1aa] text-sm">{t("import.or")}</p>
                   <button
                     onClick={() => fileInputRef.current?.click()}
                     className="px-4 py-2 bg-[#18181b] text-[#e4e4e7] text-sm rounded-lg border border-[#27272a] hover:border-[#3b82f6]/50 transition-colors"
                   >
-                    Browse Files
+                    {t("import.browse")}
                   </button>
                 </div>
               )}
@@ -240,7 +243,7 @@ export function ImportModal({ isOpen, onClose }: ImportModalProps) {
           {/* Supported Formats */}
           <div className="space-y-2">
             <label className="text-[#e4e4e7] text-sm block">
-              Supported Formats
+              {t("import.supportedFormats")}
             </label>
             <div className="grid grid-cols-3 gap-3">
               {supportedFormats.map((format) => {
@@ -274,7 +277,7 @@ export function ImportModal({ isOpen, onClose }: ImportModalProps) {
           {/* File Info */}
           <div className="space-y-2">
             <label className="text-[#e4e4e7] text-sm block">
-              Import Options
+              {t("import.options")}
             </label>
             <div className="bg-[#18181b] border border-[#27272a] rounded-lg p-4">
               <div className="flex items-center gap-3">
@@ -288,7 +291,7 @@ export function ImportModal({ isOpen, onClose }: ImportModalProps) {
                   htmlFor="replaceExisting"
                   className="text-[#e4e4e7] text-sm cursor-pointer"
                 >
-                  Replace existing features
+                  {t("import.replace")}
                 </label>
               </div>
             </div>
@@ -301,7 +304,7 @@ export function ImportModal({ isOpen, onClose }: ImportModalProps) {
             onClick={onClose}
             className="px-5 py-2.5 text-[#a1a1aa] text-sm hover:text-[#e4e4e7] hover:bg-white/5 rounded-lg transition-colors"
           >
-            Cancel
+            {t("common.cancel")}
           </button>
           <button
             onClick={handleImport}
@@ -313,7 +316,7 @@ export function ImportModal({ isOpen, onClose }: ImportModalProps) {
             }`}
           >
             <Upload className="w-4 h-4" />
-            Import
+            {t("import.importBtn")}
           </button>
         </div>
       </div>

@@ -5,6 +5,7 @@ import WKT from "ol/format/WKT";
 import { useState } from "react";
 // @ts-ignore
 import { zip } from "@mapbox/shp-write";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useGeojsonStore } from "../store/geojsonStore";
 
@@ -16,6 +17,7 @@ interface ExportModalProps {
 }
 
 export function ExportModal({ isOpen, onClose }: ExportModalProps) {
+  const { t } = useTranslation();
   const [selectedFormat, setSelectedFormat] = useState("geojson");
   const [fileName, setFileName] = useState("export");
   const [showError, setShowError] = useState(false);
@@ -38,7 +40,7 @@ export function ExportModal({ isOpen, onClose }: ExportModalProps) {
         geojsonObj = JSON.parse(geojsonText) as FeatureCollection;
       } catch (e) {
         console.error("Failed to parse GeoJSON", e);
-        toast.error("Invalid GeoJSON data");
+        toast.error(t("export.error.invalid"));
         return;
       }
 
@@ -56,7 +58,7 @@ export function ExportModal({ isOpen, onClose }: ExportModalProps) {
 
       if (featuresList.length === 0) {
         setShowError(true);
-        toast.error("No features to export");
+        toast.error(t("export.error.noFeatures"));
         return;
       }
 
@@ -140,13 +142,13 @@ export function ExportModal({ isOpen, onClose }: ExportModalProps) {
             URL.revokeObjectURL(url);
 
             onClose();
-            toast.success("Export successful");
+            toast.success(t("export.success"));
             setShowError(false);
           });
           return; // Return here as the rest of the function is for synchronous content (text/json)
         } catch (err) {
           console.error("Shapefile generation error:", err);
-          toast.error("Failed to generate Shapefile");
+          toast.error(t("export.error.shpFailed"));
           setShowError(true);
           return;
         }
@@ -168,12 +170,12 @@ export function ExportModal({ isOpen, onClose }: ExportModalProps) {
       URL.revokeObjectURL(url);
 
       onClose();
-      toast.success("Export successful");
+      toast.success(t("export.success"));
       setShowError(false);
     } catch (e) {
       console.error(e);
       setShowError(true);
-      toast.error("Export failed");
+      toast.error(t("export.error.failed"));
     }
   };
 
@@ -199,9 +201,11 @@ export function ExportModal({ isOpen, onClose }: ExportModalProps) {
 
             {/* Title and Description */}
             <div className="flex-1">
-              <h2 className="text-[#e4e4e7] text-xl mb-1">Export</h2>
+              <h2 className="text-[#e4e4e7] text-xl mb-1">
+                {t("export.title")}
+              </h2>
               <p className="text-[#a1a1aa] text-sm">
-                Export your GeoJSON data in various formats
+                {t("export.description")}
               </p>
             </div>
 
@@ -219,7 +223,9 @@ export function ExportModal({ isOpen, onClose }: ExportModalProps) {
         <div className="p-6 space-y-6">
           {/* File Name Input */}
           <div className="space-y-2">
-            <label className="text-[#e4e4e7] text-sm block">File Name</label>
+            <label className="text-[#e4e4e7] text-sm block">
+              {t("export.filename")}
+            </label>
             <div className="relative">
               <input
                 type="text"
@@ -235,7 +241,9 @@ export function ExportModal({ isOpen, onClose }: ExportModalProps) {
 
           {/* Format Selection */}
           <div className="space-y-2">
-            <label className="text-[#e4e4e7] text-sm block">Format</label>
+            <label className="text-[#e4e4e7] text-sm block">
+              {t("export.format")}
+            </label>
             <div className="grid grid-cols-3 gap-3">
               {formats.map((format) => (
                 <button
@@ -256,7 +264,7 @@ export function ExportModal({ isOpen, onClose }: ExportModalProps) {
           {/* Coordinate System */}
           <div className="space-y-2">
             <label className="text-[#e4e4e7] text-sm block">
-              Coordinate System
+              {t("export.coordinateSystem")}
             </label>
             <div className="relative">
               <select className="w-full bg-[#18181b] border border-[#27272a] rounded-lg px-4 py-2.5 text-[#e4e4e7] text-sm focus:outline-none focus:ring-2 focus:ring-[#3b82f6]/50 appearance-none cursor-pointer">
@@ -267,7 +275,7 @@ export function ExportModal({ isOpen, onClose }: ExportModalProps) {
               <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
                 <span className="bg-[#3b82f6]/20 text-[#3b82f6] text-[10px] px-2 py-0.5 rounded flex items-center gap-1">
                   <Lock className="w-2.5 h-2.5" />
-                  Locked
+                  {t("export.locked")}
                 </span>
               </div>
             </div>
@@ -278,7 +286,7 @@ export function ExportModal({ isOpen, onClose }: ExportModalProps) {
             <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 flex items-start gap-3">
               <AlertCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
               <div className="text-sm text-red-400">
-                Unable to export: No features found in the current dataset.
+                {t("export.error.noFeatures")}
               </div>
             </div>
           )}
@@ -290,14 +298,14 @@ export function ExportModal({ isOpen, onClose }: ExportModalProps) {
             onClick={onClose}
             className="px-5 py-2.5 text-[#a1a1aa] text-sm hover:text-[#e4e4e7] hover:bg-white/5 rounded-lg transition-colors"
           >
-            Cancel
+            {t("common.cancel")}
           </button>
           <button
             onClick={handleDownload}
             className="px-5 py-2.5 bg-gradient-to-r from-[#3b82f6] to-[#2563eb] text-white text-sm rounded-lg shadow-[0_4px_12px_rgba(59,130,246,0.3)] hover:shadow-[0_6px_16px_rgba(59,130,246,0.4)] transition-all flex items-center gap-2"
           >
             <Download className="w-4 h-4" />
-            Download
+            {t("export.download")}
           </button>
         </div>
       </div>

@@ -1,36 +1,47 @@
-import { useState, type CSSProperties } from 'react';
-import { Header } from './components/Header';
-import { EditorPanel } from './components/EditorPanel';
-import { MapPanel } from './components/MapPanel';
-import { Footer } from './components/Footer';
-import { ExportModal } from './components/ExportModal';
-import { ImportModal } from './components/ImportModal';
-import { Toaster } from './components/ui/sonner';
-import { useGeojsonStore } from './store/geojsonStore';
+import { useState, type CSSProperties } from "react";
+import { EditorPanel } from "./components/EditorPanel";
+import { ExportModal } from "./components/ExportModal";
+import { Footer } from "./components/Footer";
+import { Header } from "./components/Header";
+import { ImportModal } from "./components/ImportModal";
+import { MapPanel } from "./components/MapPanel";
+import { Toaster } from "./components/ui/sonner";
+import { useGeojsonStore } from "./store/geojsonStore";
+
+import { useTranslation } from "react-i18next";
 
 export default function App() {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
-  const selectedProjection = useGeojsonStore((state) => state.selectedProjection);
-  const setSelectedProjection = useGeojsonStore((state) => state.setSelectedProjection);
+  const selectedProjection = useGeojsonStore(
+    (state) => state.selectedProjection
+  );
+  const setSelectedProjection = useGeojsonStore(
+    (state) => state.setSelectedProjection
+  );
+  const { i18n } = useTranslation();
+
   const toasterStyle = {
-    '--normal-bg': '#18181b',
-    '--normal-text': '#e4e4e7',
-    '--normal-border': '#27272a',
+    "--normal-bg": "#18181b",
+    "--normal-text": "#e4e4e7",
+    "--normal-border": "#27272a",
   } as CSSProperties;
 
   return (
-    <div className="h-screen bg-[#18181b] text-[#e4e4e7] flex flex-col overflow-hidden" style={{ fontFamily: 'Inter, system-ui, -apple-system, sans-serif' }}>
+    <div
+      className="h-screen bg-[#18181b] text-[#e4e4e7] flex flex-col overflow-hidden"
+      style={{ fontFamily: "Inter, system-ui, -apple-system, sans-serif" }}
+    >
       {/* Header */}
-      <Header 
-        onExportClick={() => setIsExportModalOpen(true)} 
+      <Header
+        onExportClick={() => setIsExportModalOpen(true)}
         onImportClick={() => setIsImportModalOpen(true)}
       />
 
       {/* Main Content Area */}
       <div className="flex-1 flex overflow-hidden">
         {/* Left Editor Panel */}
-        <EditorPanel 
+        <EditorPanel
           selectedProjection={selectedProjection}
           onProjectionChange={setSelectedProjection}
         />
@@ -40,21 +51,22 @@ export default function App() {
       </div>
 
       {/* Footer */}
-      <Footer 
+      <Footer
+        key={i18n.language}
         selectedProjection={selectedProjection}
         onProjectionChange={setSelectedProjection}
       />
 
       {/* Export Modal */}
-      <ExportModal 
-        isOpen={isExportModalOpen} 
-        onClose={() => setIsExportModalOpen(false)} 
+      <ExportModal
+        isOpen={isExportModalOpen}
+        onClose={() => setIsExportModalOpen(false)}
       />
 
       {/* Import Modal */}
-      <ImportModal 
-        isOpen={isImportModalOpen} 
-        onClose={() => setIsImportModalOpen(false)} 
+      <ImportModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
       />
 
       <Toaster
@@ -62,7 +74,8 @@ export default function App() {
         position="top-right"
         style={toasterStyle}
         toastOptions={{
-          className: 'bg-[#18181b] text-[#e4e4e7] border border-[#27272a] shadow-lg',
+          className:
+            "bg-[#18181b] text-[#e4e4e7] border border-[#27272a] shadow-lg",
         }}
       />
     </div>

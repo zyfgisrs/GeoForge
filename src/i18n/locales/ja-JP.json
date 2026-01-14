@@ -1,0 +1,280 @@
+{
+  "common": {
+    "import": "インポート",
+    "export": "エクスポート",
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "save": "保存",
+    "delete": "削除",
+    "close": "閉じる",
+    "loading": "読み込み中...",
+    "error": "エラー",
+    "success": "成功",
+    "copy": "コピー",
+    "paste": "貼り付け",
+    "clear": "クリア",
+    "reset": "リセット",
+    "apply": "適用",
+    "search": "検索",
+    "noData": "データなし",
+    "features": "フィーチャ",
+    "feature": "フィーチャ"
+  },
+  "header": {
+    "import": "インポート",
+    "export": "エクスポート"
+  },
+  "editor": {
+    "title": "エディタ",
+    "geojson": "GeoJSON",
+    "wkt": "WKT",
+    "table": "テーブル",
+    "collection": "フィーチャコレクション",
+    "elements": "個別フィーチャ",
+    "format": "フォーマット",
+    "validate": "検証",
+    "validJson": "有効な GeoJSON",
+    "invalidJson": "無効な JSON",
+    "loadContent": "強制ロード",
+    "largeFile": "ファイルが大きいため、パフォーマンスに影響する可能性があります",
+    "lineCount": "行",
+    "charCount": "文字",
+    "copySuccess": "クリップボードにコピーしました",
+    "copyFail": "コピーに失敗しました",
+    "clearAllTitle": "すべてのデータをクリア？",
+    "clearAllDesc": "エディタの内容をクリアし、空の GeoJSON にリセットします。",
+    "dataTooLarge": "データが大きすぎてプレビューできません",
+    "dataLargeDesc": "コンテンツに {{length}} 文字が含まれています（{{size}} MB）。プレビューするとブラウザが遅くなる可能性があります。"
+  },
+  "analysis": {
+    "title": "分析ツール",
+    "buffer": "バッファ分析",
+    "union": "結合 (Union)",
+    "intersection": "交差 (Intersection)",
+    "difference": "差分 (Difference)",
+    "dissolve": "ディゾルブ",
+    "simplify": "簡素化",
+    "convexHull": "凸包 (Convex Hull)",
+    "centroid": "重心 (Centroid)",
+    "area": "面積",
+    "length": "長さ",
+    "distance": "距離",
+    "bufferRadius": "バッファ半径",
+    "units": "単位",
+    "meters": "メートル",
+    "kilometers": "キロメートル",
+    "miles": "マイル",
+    "feet": "フィート",
+    "inches": "インチ",
+    "inputs": {
+      "featureCollection": "フィーチャコレクション",
+      "feature": "フィーチャ",
+      "geometry": "ジオメトリ"
+    },
+    "errors": {
+      "noInput": "GeoJSON 入力がありません",
+      "invalidJson": "無効な GeoJSON",
+      "noFeatures": "フィーチャが見つかりません",
+      "emptyResult": "{{label}} の結果は空です",
+      "calculationFailed": "{{label}} の計算に失敗しました",
+      "invalidBufferRadius": "無効なバッファ半径",
+      "invalidSmoothIterations": "無効なスムージング反復回数",
+      "requiresPolygon": "ポリゴンまたはマルチポリゴンの入力が必要です",
+      "requiresPoint": "ポイントフィーチャが必要です",
+      "requiresPointAndPolygon": "ポイントとポリゴンの両方のフィーチャが必要です",
+      "unionRequiresTwo": "結合には少なくとも 2 つのポリゴンが必要です",
+      "intersectRequiresTwo": "交差には少なくとも 2 つのポリゴンが必要です",
+      "differenceRequiresTwo": "差分には少なくとも 2 つのポリゴンが必要です",
+      "midpointRequiresTwo": "中点には正確に 2 つのポイントが必要です",
+      "voronoiEmpty": "ボロノイの結果は空です",
+      "gridTooDense": "グリッドが細かすぎます (> {{countVal}} セル)。最大 {{maxVal}}。セルサイズを大きくするか、領域を小さくしてください。",
+      "invalidCellSide": "無効なセル辺の長さ"
+    },
+    "success": {
+      "measurementAdded": "測定結果が属性に追加されました",
+      "replaced": "エディタの内容を分析結果で置き換えました",
+      "added": "分析結果をエディタの内容に追加しました"
+    },
+    "tools": {
+      "center": {
+        "name": "中心",
+        "desc": "フィーチャまたはコレクションの絶対中心点を計算します。"
+      },
+      "bbox": {
+        "name": "バウンディングボックス",
+        "desc": "GeoJSON オブジェクトのバウンディングボックスを計算します。"
+      },
+      "polygonSmooth": {
+        "name": "ポリゴンスムージング",
+        "desc": "設定可能な反復回数でポリゴンの境界を滑らかにします。"
+      },
+      "buffer": {
+        "name": "バッファ",
+        "desc": "入力フィーチャから指定された半径のバッファを計算します。"
+      },
+      "voronoi": {
+        "name": "ボロノイ",
+        "desc": "入力ポイントからボロノイ図を作成します。"
+      },
+      "simplify": {
+        "name": "簡素化",
+        "desc": "Ramer-Douglas-Peucker アルゴリズムを使用して頂点を削除し、簡素化します。"
+      },
+      "concave": {
+        "name": "凹包 (Concave Hull)",
+        "desc": "ポイントセットに基づいて凹包ポリゴンを生成します。"
+      },
+      "union": {
+        "name": "結合",
+        "desc": "2 つ以上のポリゴンを 1 つのポリゴンにマージします。"
+      },
+      "intersect": {
+        "name": "交差",
+        "desc": "ポリゴンセットの共通交差領域を取得します。"
+      },
+      "difference": {
+        "name": "差分",
+        "desc": "最初のポリゴンから後続のポリゴンを引いた差を計算します。"
+      },
+      "midpoint": {
+        "name": "中点",
+        "desc": "2 点間の中間点を計算します。"
+      },
+      "measurement": {
+        "name": "測定",
+        "desc": "フィーチャに面積 (sqm/sqkm) と長さ (m/km) 属性を追加します。"
+      },
+      "pointsWithin": {
+        "name": "ポリゴン内のポイント",
+        "desc": "指定されたポリゴン内にあるポイントを見つけます。"
+      },
+      "hexGrid": {
+        "name": "六角形グリッド",
+        "desc": "バウンディングボックス内に六角形グリッドを生成します。"
+      },
+      "pointGrid": {
+        "name": "ポイントグリッド",
+        "desc": "バウンディングボックス内にポイントグリッドを生成します。"
+      },
+      "squareGrid": {
+        "name": "正方形グリッド",
+        "desc": "バウンディングボックス内に正方形グリッドを生成します。"
+      },
+      "convex": {
+        "name": "凸包",
+        "desc": "入力フィーチャの凸包を計算します。"
+      }
+    },
+    "labels": {
+      "iterations": "反復回数",
+      "radius": "半径",
+      "tolerance": "許容誤差",
+      "maxEdge": "最大エッジ",
+      "cellSide": "セル辺",
+      "replace": "内容を置換",
+      "addToMap": "マップに追加",
+      "copyResult": "結果をコピー",
+      "searchTools": "ツールを検索...",
+      "largeDataset": "大規模データセットが検出されました。ブラウザが一時的に停止する可能性があります。",
+      "merging": "マージ中...",
+      "run": "実行",
+      "result": "結果 (GeoJSON)",
+      "input": "入力"
+    }
+  },
+  "footerUI": {
+    "projection": "投影法",
+    "coordinates": "座標",
+    "zoom": "ズームレベル",
+    "scale": "スケール",
+    "featuresCount": "{{count}} フィーチャ",
+    "mousePosition": "緯度: {{lat}}, 経度: {{lng}}",
+    "mousePositionXY": "X: {{x}}, Y: {{y}}"
+  },
+  "map": {
+    "drawing": {
+      "point": "ポイント描画",
+      "line": "ライン描画",
+      "polygon": "ポリゴン描画",
+      "rectangle": "長方形描画",
+      "delete": "削除",
+      "modeActive": "描画モードが有効です。Esc で終了。"
+    },
+    "navigation": {
+      "zoomIn": "拡大",
+      "zoomOut": "縮小",
+      "resetNorth": "北をリセット"
+    },
+    "measure": {
+      "distance": "距離計測",
+      "area": "面積計測"
+    },
+    "snapshot": "スナップショット",
+    "search": "場所を検索...",
+    "properties": {
+      "title": "属性",
+      "noProperties": "属性なし",
+      "add": "属性追加",
+      "cancel": "キャンセル",
+      "save": "保存",
+      "selected": "選択済み。ダブルクリックまたは右クリックで属性編集。Esc で選択解除。",
+      "key": "キー",
+      "value": "値",
+      "remove": "削除"
+    },
+    "baseMap": {
+      "switch": "ベースマップ切替",
+      "osm": "OpenStreetMap",
+      "cartoLight": "CartoDB Light",
+      "cartoDark": "CartoDB Dark",
+      "satellite": "衛星写真"
+    }
+  },
+  "export": {
+    "title": "エクスポート",
+    "description": "GeoJSON データをさまざまな形式でエクスポート",
+    "format": "フォーマット",
+    "filename": "ファイル名",
+    "coordinateSystem": "座標系",
+    "locked": "ロック済み",
+    "download": "ダウンロード",
+    "error": {
+      "invalid": "無効な GeoJSON データ",
+      "noFeatures": "エクスポートするフィーチャがありません",
+      "failed": "エクスポート失敗",
+      "shpFailed": "Shapefile 生成失敗"
+    },
+    "success": "エクスポート成功"
+  },
+  "import": {
+    "title": "インポート",
+    "description": "GeoJSON, Shapefile または WKT ファイルをアップロード",
+    "dragDrop": "ここにファイルをドロップ",
+    "or": "または",
+    "browse": "ファイルを選択",
+    "supportedFormats": "対応フォーマット",
+    "options": "インポートオプション",
+    "replace": "既存のフィーチャを置換",
+    "importBtn": "インポート",
+    "error": {
+      "unsupported": "未対応のファイル形式です。GeoJSON, Shapefile (ZIP), または WKT (TXT) ファイルをアップロードしてください。",
+      "invalid": "無効な GeoJSON ファイル。",
+      "failed": "ファイルの読み込みに失敗しました。"
+    }
+  },
+  "language": {
+    "zh": "中文 (简体)",
+    "zh-TW": "中文 (繁體)",
+    "en": "English",
+    "ko": "한국어",
+    "ja": "日本語",
+    "fr": "フランス語",
+    "es": "スペイン語"
+  },
+  "footer_coordinates_v2": "緯度: {{lat}}, 経度: {{lng}}",
+  "footer_coordinates_xy_v2": "X: {{x}}, Y: {{y}}",
+  "footer_lbl_lat": "緯度",
+  "footer_lbl_lng": "経度",
+  "footer_lbl_x": "X",
+  "footer_lbl_y": "Y"
+}
