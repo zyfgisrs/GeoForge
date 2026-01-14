@@ -5,6 +5,7 @@ node_modules/
 
 # --- 构建产物 (Production) ---
 dist/
+build/
 dist-ssr/
 *.tsbuildinfo
 
