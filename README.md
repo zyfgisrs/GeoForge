@@ -2,6 +2,8 @@
 
 GeoForge (formerly GeoJSON Tool) is a modern, high-performance web application for creating, editing, analyzing, and visualizing geospatial data. Built with React and OpenLayers, it provides a seamless experience for working with GeoJSON, WKT, and other spatial formats.
 
+[**🌐 Try it Online**](https://www.geo-forge.org/)
+
 ![GeoForge Preview](./public/home.png)
 
 ## Features
@@ -12,6 +14,8 @@ GeoForge (formerly GeoJSON Tool) is a modern, high-performance web application f
 - **Base Maps**: Switch between **OpenStreetMap**, **CartoDB Light**, **CartoDB Dark**, and **ArcGIS Satellite**.
 - **Interactions**:
   - **Smooth Navigation**: Zoom, Pan, and Rotate (Ctrl + Drag).
+  - **Location Search**: Instantly find places and center the map on them.
+  - **Map Snapshot**: Capture high-quality screenshots of your current map view.
   - **Drawing Tools**: Create Points, LineStrings, Polygons, and Rectangles.
   - **Editing**: Modify existing geometries, snap to vertices, and rotate features.
   - **Measurement**: Interactive Distance (km/m) and Area (km²/m²) tools.
@@ -82,8 +86,8 @@ Built-in advanced geospatial analysis tools powered by **Turf.js**:
 1.  Clone the repository:
 
     ```bash
-    git clone https://github.com/yourusername/geoforge.git
-    cd geoforge
+    git clone https://github.com/zyfgisrs/GeoForge.git
+    cd GeoForge
     ```
 
 2.  Install dependencies:

@@ -1,4 +1,4 @@
-import { Download, Globe, Upload } from "lucide-react";
+import { Download, Github, Globe, Upload } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import {
   DropdownMenu,
@@ -42,6 +42,16 @@ export function Header({ onExportClick, onImportClick }: HeaderProps) {
           <Download className="w-4 h-4" />
           {t("header.export")}
         </button>
+        <a
+          href="https://github.com/zyfgisrs/GeoForge"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-4 py-1.5 text-[#e4e4e7] hover:bg-[#27272a] rounded transition-colors flex items-center gap-2"
+          style={{ fontSize: "13px" }}
+        >
+          <Github className="w-4 h-4" />
+          GitHub
+        </a>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
