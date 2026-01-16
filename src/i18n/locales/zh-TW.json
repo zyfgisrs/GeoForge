@@ -227,7 +227,26 @@
       "osm": "OpenStreetMap",
       "cartoLight": "CartoDB 淺色",
       "cartoDark": "CartoDB 深色",
-      "satellite": "衛星圖"
+      "cartoVoyager": "CartoDB 航海",
+      "satellite": "衛星圖",
+      "arcgisTopo": "ArcGIS 地形",
+      "opentopo": "OpenTopoMap"
+    },
+    "style": {
+      "title": "樣式",
+      "fillColor": "填充顏色",
+      "strokeColor": "邊框顏色",
+      "strokeWidth": "邊框寬度",
+      "strokeOpacity": "邊框透明度",
+      "fillOpacity": "填充透明度",
+      "opacity": "透明度",
+      "size": "大小",
+      "dashStyle": "虛線樣式",
+      "none": "實線",
+      "dash": "虛線",
+      "dot": "點線",
+      "dashdot": "點劃線",
+      "apply": "套用樣式"
     }
   },
   "export": {

@@ -227,7 +227,26 @@
       "osm": "OpenStreetMap",
       "cartoLight": "CartoDB Light",
       "cartoDark": "CartoDB Dark",
-      "satellite": "衛星写真"
+      "cartoVoyager": "CartoDB Voyager",
+      "satellite": "衛星写真",
+      "arcgisTopo": "ArcGIS 地形",
+      "opentopo": "OpenTopoMap"
+    },
+    "style": {
+      "title": "スタイル",
+      "fillColor": "塗りつぶし色",
+      "strokeColor": "線の色",
+      "strokeWidth": "線の太さ",
+      "strokeOpacity": "線の透明度",
+      "fillOpacity": "塗りつぶしの透明度",
+      "opacity": "透明度",
+      "size": "サイズ",
+      "dashStyle": "線種",
+      "none": "実線",
+      "dash": "破線",
+      "dot": "点線",
+      "dashdot": "一点鎖線",
+      "apply": "スタイル適用"
     }
   },
   "export": {

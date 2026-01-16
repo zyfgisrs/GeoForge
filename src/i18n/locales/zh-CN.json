@@ -211,6 +211,7 @@
     },
     "snapshot": "地图快照",
     "search": "搜索地点...",
+    "searchHint": "输入地名后键盘回车地图可定位到目标位置",
     "properties": {
       "title": "属性",
       "noProperties": "无属性",
@@ -227,7 +228,26 @@
       "osm": "OpenStreetMap",
       "cartoLight": "CartoDB 浅色",
       "cartoDark": "CartoDB 深色",
-      "satellite": "卫星图"
+      "cartoVoyager": "CartoDB 航海",
+      "satellite": "卫星图",
+      "arcgisTopo": "ArcGIS 地形",
+      "opentopo": "OpenTopoMap"
+    },
+    "style": {
+      "title": "样式",
+      "fillColor": "填充颜色",
+      "strokeColor": "边框颜色",
+      "strokeWidth": "边框宽度",
+      "strokeOpacity": "边框透明度",
+      "fillOpacity": "填充透明度",
+      "opacity": "透明度",
+      "size": "大小",
+      "dashStyle": "虚线样式",
+      "none": "实线",
+      "dash": "虚线",
+      "dot": "点线",
+      "dashdot": "点划线",
+      "apply": "应用样式"
     }
   },
   "export": {

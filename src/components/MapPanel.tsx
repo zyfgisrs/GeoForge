@@ -66,8 +66,68 @@ type PropertyEntry = {
   value: string;
 };
 
-type BaseMap = "osm" | "carto-light" | "carto-dark" | "arcgis-sat";
+type BaseMap =
+  | "osm"
+  | "carto-light"
+  | "carto-dark"
+  | "carto-voyager"
+  | "arcgis-sat"
+  | "arcgis-topo"
+  | "opentopo";
+type EditorTab = "properties" | "style";
 
+// SimpleStyle Spec compatible style interface
+interface FeatureStyle {
+  // Point styles
+  "marker-color"?: string;
+  "marker-size"?: number;
+  // Stroke styles (Line & Polygon)
+  stroke?: string;
+  "stroke-width"?: number;
+  "stroke-opacity"?: number;
+  "stroke-dasharray"?: "none" | "dash" | "dot" | "dashdot";
+  // Fill styles (Polygon)
+  fill?: string;
+  "fill-opacity"?: number;
+}
+
+const DEFAULT_STYLES: Record<string, FeatureStyle> = {
+  Point: {
+    "marker-color": "#22d3ee",
+    "marker-size": 6,
+    stroke: "#0ea5e9",
+    "stroke-width": 1.5,
+  },
+  LineString: {
+    stroke: "#3b82f6",
+    "stroke-width": 3,
+    "stroke-opacity": 1,
+    "stroke-dasharray": "none",
+  },
+  Polygon: {
+    stroke: "#3b82f6",
+    "stroke-width": 2,
+    "stroke-opacity": 1,
+    fill: "#3b82f6",
+    "fill-opacity": 0.3,
+  },
+};
+
+const DASH_PATTERNS: Record<string, number[] | undefined> = {
+  none: undefined,
+  dash: [12, 8],
+  dot: [2, 6],
+  dashdot: [12, 6, 2, 6],
+};
+
+// Convert hex color to rgba with opacity
+const hexToRgba = (hex: string, opacity: number): string => {
+  const cleanHex = hex.replace("#", "");
+  const r = parseInt(cleanHex.substring(0, 2), 16);
+  const g = parseInt(cleanHex.substring(2, 4), 16);
+  const b = parseInt(cleanHex.substring(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+};
 const BASE_MAPS: {
   id: BaseMap;
   name: string;
@@ -90,11 +150,32 @@ const BASE_MAPS: {
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
   },
   {
+    id: "carto-voyager",
+    name: "CartoDB Voyager",
+    url: "https://{a-c}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+  },
+  {
     id: "arcgis-sat",
     name: "Satellite",
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     attribution:
       "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
+  },
+  {
+    id: "arcgis-topo",
+    name: "ArcGIS Topo",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+    attribution:
+      "Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012",
+  },
+  {
+    id: "opentopo",
+    name: "OpenTopoMap",
+    url: "https://{a-c}.tile.opentopomap.org/{z}/{x}/{y}.png",
+    attribution:
+      'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
   },
 ];
 
@@ -149,6 +230,9 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
     y: 16,
   });
   const [propertyEntries, setPropertyEntries] = useState<PropertyEntry[]>([]);
+  const [activeEditorTab, setActiveEditorTab] =
+    useState<EditorTab>("properties");
+  const [featureStyle, setFeatureStyle] = useState<FeatureStyle>({});
   const [analysisOpen, setAnalysisOpen] = useState(false);
   const [activeBaseMap, setActiveBaseMap] = useState<BaseMap>("osm");
   const [baseMapMenuOpen, setBaseMapMenuOpen] = useState(false);
@@ -273,7 +357,37 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
   const closePropertyEditor = () => {
     setPropertyEditorOpen(false);
     setPropertyEditorFeature(null);
+    setActiveEditorTab("properties");
+    setFeatureStyle({});
   };
+
+  // Extract style properties from feature
+  const getStyleFromFeature = (feature: Feature<Geometry>): FeatureStyle => {
+    const props = feature.getProperties();
+    const geomType = feature.getGeometry()?.getType();
+    const baseType = geomType?.replace("Multi", "") || "Polygon";
+    const defaults = DEFAULT_STYLES[baseType] || DEFAULT_STYLES.Polygon;
+
+    return {
+      "marker-color": props["marker-color"] ?? defaults["marker-color"],
+      "marker-size": props["marker-size"] ?? defaults["marker-size"],
+      stroke: props["stroke"] ?? defaults["stroke"],
+      "stroke-width": props["stroke-width"] ?? defaults["stroke-width"],
+      "stroke-opacity": props["stroke-opacity"] ?? defaults["stroke-opacity"],
+      "stroke-dasharray":
+        props["stroke-dasharray"] ?? defaults["stroke-dasharray"],
+      fill: props["fill"] ?? defaults["fill"],
+      "fill-opacity": props["fill-opacity"] ?? defaults["fill-opacity"],
+    };
+  };
+
+  // Get simple geometry type (Point, LineString, Polygon)
+  const getSimpleGeomType = (feature: Feature<Geometry> | null): string => {
+    if (!feature) return "Polygon";
+    const geomType = feature.getGeometry()?.getType() || "Polygon";
+    return geomType.replace("Multi", "");
+  };
+
   const getEditorPosition = (clientX: number, clientY: number) => {
     const container = mapContainerRef.current;
     if (!container) {
@@ -281,8 +395,8 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
     }
 
     const rect = container.getBoundingClientRect();
-    const panelWidth = 320;
-    const panelHeight = 260;
+    const panelWidth = 360;
+    const panelHeight = 340;
     const padding = 12;
     let x = clientX - rect.left + 8;
     let y = clientY - rect.top + 8;
@@ -293,17 +407,32 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
 
     return { x, y };
   };
+
   const openPropertyEditor = (
     feature: Feature<Geometry>,
     clientX: number,
     clientY: number
   ) => {
+    // Extract properties (excluding geometry and style properties)
+    const styleKeys = [
+      "marker-color",
+      "marker-size",
+      "stroke",
+      "stroke-width",
+      "stroke-opacity",
+      "stroke-dasharray",
+      "fill",
+      "fill-opacity",
+    ];
     const entries = Object.entries(feature.getProperties())
-      .filter(([key]) => key !== "geometry")
+      .filter(([key]) => key !== "geometry" && !styleKeys.includes(key))
       .map(([key, value]) => createPropertyEntry(key, value));
+
     setPropertyEntries(entries);
     setPropertyEditorFeature(feature);
     setPropertyEditorPosition(getEditorPosition(clientX, clientY));
+    setFeatureStyle(getStyleFromFeature(feature));
+    setActiveEditorTab("properties");
     setPropertyEditorOpen(true);
   };
   const updatePropertyEntry = (
@@ -338,6 +467,24 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
       nextProps[key] = parsePropertyValue(entry.value);
     });
 
+    // Also preserve style properties
+    const styleKeys = [
+      "marker-color",
+      "marker-size",
+      "stroke",
+      "stroke-width",
+      "stroke-opacity",
+      "stroke-dasharray",
+      "fill",
+      "fill-opacity",
+    ];
+    styleKeys.forEach((key) => {
+      const value = featureStyle[key as keyof FeatureStyle];
+      if (value !== undefined) {
+        nextProps[key] = value;
+      }
+    });
+
     const existingProps = propertyEditorFeature.getProperties();
     Object.keys(existingProps).forEach((key) => {
       if (key === "geometry") {
@@ -349,8 +496,63 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
     });
 
     propertyEditorFeature.setProperties(nextProps);
-    propertyEditorFeature.setProperties(nextProps);
+    // Force feature to redraw (in case style properties were changed)
+    propertyEditorFeature.changed();
+    vectorLayerRef.current?.changed();
     closePropertyEditor();
+  };
+
+  const saveStyleChanges = () => {
+    if (!propertyEditorFeature) {
+      closePropertyEditor();
+      return;
+    }
+
+    // Apply style to feature properties
+    const geomType = getSimpleGeomType(propertyEditorFeature);
+    const styleProps: Record<string, unknown> = {};
+
+    if (geomType === "Point") {
+      styleProps["marker-color"] = featureStyle["marker-color"];
+      styleProps["marker-size"] = featureStyle["marker-size"];
+      styleProps["stroke"] = featureStyle["stroke"];
+      styleProps["stroke-width"] = featureStyle["stroke-width"];
+    } else if (geomType === "LineString") {
+      styleProps["stroke"] = featureStyle["stroke"];
+      styleProps["stroke-width"] = featureStyle["stroke-width"];
+      styleProps["stroke-opacity"] = featureStyle["stroke-opacity"];
+      styleProps["stroke-dasharray"] = featureStyle["stroke-dasharray"];
+    } else {
+      // Polygon
+      styleProps["stroke"] = featureStyle["stroke"];
+      styleProps["stroke-width"] = featureStyle["stroke-width"];
+      styleProps["stroke-opacity"] = featureStyle["stroke-opacity"];
+      styleProps["fill"] = featureStyle["fill"];
+      styleProps["fill-opacity"] = featureStyle["fill-opacity"];
+    }
+
+    // Also keep existing non-style properties
+    const existingProps = propertyEditorFeature.getProperties();
+    Object.entries(existingProps).forEach(([key, value]) => {
+      if (key !== "geometry" && !(key in styleProps)) {
+        styleProps[key] = value;
+      }
+    });
+
+    propertyEditorFeature.setProperties(styleProps);
+    // Force feature to redraw with new style
+    propertyEditorFeature.changed();
+    // Also refresh the layer to ensure immediate visual update
+    vectorLayerRef.current?.changed();
+
+    // Clear selection so user can see the new style immediately
+    selectInteractionRef.current?.getFeatures().clear();
+
+    closePropertyEditor();
+  };
+
+  const updateFeatureStyle = (key: keyof FeatureStyle, value: any) => {
+    setFeatureStyle((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleSnapshot = () => {
@@ -474,20 +676,84 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
     const vectorLayer = new VectorLayer({
       source: vectorSource,
       style: (feature, resolution) => {
+        const props = feature.getProperties();
         const geometryType = feature.getGeometry()?.getType();
-        if (geometryType === "Point" || geometryType === "MultiPoint") {
+        const baseType = geometryType?.replace("Multi", "") || "Polygon";
+
+        // Get style from properties or use defaults
+        const defaults = DEFAULT_STYLES[baseType] || DEFAULT_STYLES.Polygon;
+
+        if (baseType === "Point") {
+          const markerColor =
+            props["marker-color"] ?? defaults["marker-color"] ?? "#22d3ee";
+          const markerSize =
+            props["marker-size"] ?? defaults["marker-size"] ?? 6;
+          const strokeColor =
+            props["stroke"] ?? defaults["stroke"] ?? "#0ea5e9";
+          const strokeWidth =
+            props["stroke-width"] ?? defaults["stroke-width"] ?? 1.5;
+
           return new Style({
             image: new CircleStyle({
-              radius: 5,
-              fill: new Fill({ color: "rgba(34, 211, 238, 0.8)" }),
+              radius: markerSize,
+              fill: new Fill({ color: markerColor }),
               stroke: new Stroke({
-                color: "rgba(14, 165, 233, 0.9)",
-                width: 1.5,
+                color: strokeColor,
+                width: strokeWidth,
               }),
             }),
           });
         }
-        return createDefaultStyle(feature, resolution);
+
+        if (baseType === "LineString") {
+          const strokeColor =
+            props["stroke"] ?? defaults["stroke"] ?? "#3b82f6";
+          const strokeWidth =
+            props["stroke-width"] ?? defaults["stroke-width"] ?? 3;
+          const strokeOpacity =
+            props["stroke-opacity"] ?? defaults["stroke-opacity"] ?? 1;
+          const dashType =
+            props["stroke-dasharray"] ?? defaults["stroke-dasharray"] ?? "none";
+          const lineDash = DASH_PATTERNS[dashType] || undefined;
+
+          // Parse color with opacity
+          const colorWithOpacity =
+            strokeOpacity < 1
+              ? hexToRgba(strokeColor, strokeOpacity)
+              : strokeColor;
+
+          return new Style({
+            stroke: new Stroke({
+              color: colorWithOpacity,
+              width: strokeWidth,
+              lineDash,
+            }),
+          });
+        }
+
+        // Polygon
+        const strokeColor = props["stroke"] ?? defaults["stroke"] ?? "#3b82f6";
+        const strokeWidth =
+          props["stroke-width"] ?? defaults["stroke-width"] ?? 2;
+        const strokeOpacity =
+          props["stroke-opacity"] ?? defaults["stroke-opacity"] ?? 1;
+        const fillColor = props["fill"] ?? defaults["fill"] ?? "#3b82f6";
+        const fillOpacity =
+          props["fill-opacity"] ?? defaults["fill-opacity"] ?? 0.3;
+
+        const strokeWithOpacity =
+          strokeOpacity < 1
+            ? hexToRgba(strokeColor, strokeOpacity)
+            : strokeColor;
+        const fillWithOpacity = hexToRgba(fillColor, fillOpacity);
+
+        return new Style({
+          stroke: new Stroke({
+            color: strokeWithOpacity,
+            width: strokeWidth,
+          }),
+          fill: new Fill({ color: fillWithOpacity }),
+        });
       },
     });
     vectorLayerRef.current = vectorLayer;
@@ -1270,6 +1536,7 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
               onClick={() => {
                 setSearchOpen(!searchOpen);
                 if (!searchOpen) {
+                  toast.info(t("map.searchHint"));
                   setTimeout(
                     () => document.getElementById("search-input")?.focus(),
                     100
@@ -1509,96 +1776,470 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
         >
           <div
             ref={propertyEditorRef}
-            className="bg-[#18181b] border border-[#27272a] rounded-lg shadow-lg p-4 text-[#e4e4e7]"
-            style={{ width: 320 }}
+            className="bg-[#18181b] border border-[#27272a] rounded-lg shadow-lg text-[#e4e4e7]"
+            style={{ width: 360 }}
             onContextMenu={(event) => event.preventDefault()}
           >
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm">{t("map.properties.title")}</span>
-                <button
-                  className="p-1 text-[#a1a1aa] hover:text-[#e4e4e7] hover:bg-[#27272a] rounded transition-colors"
-                  onClick={closePropertyEditor}
-                  title={t("map.properties.close")}
-                  aria-label={t("map.properties.close")}
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              <div
-                className="flex flex-col gap-2 overflow-auto property-scrollbar"
-                style={{ maxHeight: 240 }}
+            {/* Tab Header */}
+            <div className="flex border-b border-[#27272a]">
+              <button
+                className={`flex-1 px-4 py-2.5 text-xs font-medium transition-colors ${
+                  activeEditorTab === "properties"
+                    ? "text-[#3b82f6] border-b-2 border-[#3b82f6] bg-[#3b82f6]/5"
+                    : "text-[#a1a1aa] hover:text-[#e4e4e7] hover:bg-[#27272a]/50"
+                }`}
+                onClick={() => setActiveEditorTab("properties")}
               >
-                {propertyEntries.length === 0 ? (
-                  <div className="text-xs text-[#71717a]">
-                    {t("map.properties.noProperties")}
+                {t("map.properties.title")}
+              </button>
+              <button
+                className={`flex-1 px-4 py-2.5 text-xs font-medium transition-colors ${
+                  activeEditorTab === "style"
+                    ? "text-[#3b82f6] border-b-2 border-[#3b82f6] bg-[#3b82f6]/5"
+                    : "text-[#a1a1aa] hover:text-[#e4e4e7] hover:bg-[#27272a]/50"
+                }`}
+                onClick={() => setActiveEditorTab("style")}
+              >
+                {t("map.style.title")}
+              </button>
+              <button
+                className="px-3 py-2 text-[#a1a1aa] hover:text-[#e4e4e7] hover:bg-[#27272a] transition-colors"
+                onClick={closePropertyEditor}
+                title={t("map.properties.close")}
+                aria-label={t("map.properties.close")}
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="p-4">
+              {/* Properties Tab Content */}
+              {activeEditorTab === "properties" && (
+                <div className="flex flex-col gap-3">
+                  <div
+                    className="flex flex-col gap-2 overflow-auto property-scrollbar"
+                    style={{ maxHeight: 200 }}
+                  >
+                    {propertyEntries.length === 0 ? (
+                      <div className="text-xs text-[#71717a] py-2">
+                        {t("map.properties.noProperties")}
+                      </div>
+                    ) : (
+                      propertyEntries.map((entry) => (
+                        <div
+                          key={entry.id}
+                          className="flex items-center gap-2 min-w-0"
+                        >
+                          <input
+                            className="min-w-0 flex-1 bg-[#0b0b0f] border border-[#27272a] rounded px-2 py-1.5 text-[#e4e4e7] text-xs focus:outline-none focus:ring-2 focus:ring-[#3b82f6]/50"
+                            placeholder={t("map.properties.key")}
+                            value={entry.key}
+                            onChange={(event) =>
+                              updatePropertyEntry(
+                                entry.id,
+                                "key",
+                                event.target.value
+                              )
+                            }
+                          />
+                          <input
+                            className="min-w-0 flex-1 bg-[#0b0b0f] border border-[#27272a] rounded px-2 py-1.5 text-[#e4e4e7] text-xs focus:outline-none focus:ring-2 focus:ring-[#3b82f6]/50"
+                            placeholder={t("map.properties.value")}
+                            value={entry.value}
+                            onChange={(event) =>
+                              updatePropertyEntry(
+                                entry.id,
+                                "value",
+                                event.target.value
+                              )
+                            }
+                          />
+                          <button
+                            className="p-1 text-[#a1a1aa] hover:text-[#e4e4e7] hover:bg-[#27272a] rounded transition-colors"
+                            onClick={() => removePropertyEntry(entry.id)}
+                            title={t("map.properties.remove")}
+                            aria-label={t("map.properties.remove")}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))
+                    )}
                   </div>
-                ) : (
-                  propertyEntries.map((entry) => (
-                    <div
-                      key={entry.id}
-                      className="flex items-center gap-2 min-w-0"
+
+                  <div className="flex items-center justify-between pt-2 border-t border-[#27272a]">
+                    <button
+                      className="text-xs text-[#a1a1aa] hover:text-[#e4e4e7] transition-colors"
+                      onClick={addPropertyEntry}
                     >
-                      <input
-                        className="min-w-0 flex-1 bg-[#0b0b0f] border border-[#27272a] rounded px-2 py-1 text-[#e4e4e7] text-xs focus:outline-none focus:ring-2 focus:ring-[#3b82f6]/50"
-                        placeholder={t("map.properties.key")}
-                        value={entry.key}
-                        onChange={(event) =>
-                          updatePropertyEntry(
-                            entry.id,
-                            "key",
-                            event.target.value
-                          )
-                        }
-                      />
-                      <input
-                        className="min-w-0 flex-1 bg-[#0b0b0f] border border-[#27272a] rounded px-2 py-1 text-[#e4e4e7] text-xs focus:outline-none focus:ring-2 focus:ring-[#3b82f6]/50"
-                        placeholder={t("map.properties.value")}
-                        value={entry.value}
-                        onChange={(event) =>
-                          updatePropertyEntry(
-                            entry.id,
-                            "value",
-                            event.target.value
-                          )
-                        }
-                      />
+                      + {t("map.properties.add")}
+                    </button>
+                    <div className="flex items-center gap-1">
                       <button
-                        className="p-1 text-[#a1a1aa] hover:text-[#e4e4e7] hover:bg-[#27272a] rounded transition-colors"
-                        onClick={() => removePropertyEntry(entry.id)}
-                        title={t("map.properties.remove")}
-                        aria-label={t("map.properties.remove")}
+                        className="px-3 py-1.5 rounded text-xs text-[#a1a1aa] hover:text-[#e4e4e7] hover:bg-[#27272a] transition-colors"
+                        onClick={closePropertyEditor}
                       >
-                        <Trash2 className="w-4 h-4" />
+                        {t("map.properties.cancel")}
+                      </button>
+                      <button
+                        className="px-3 py-1.5 rounded text-xs bg-[#3b82f6] text-white hover:bg-[#2563eb] transition-colors"
+                        onClick={savePropertyChanges}
+                      >
+                        {t("map.properties.save")}
                       </button>
                     </div>
-                  ))
-                )}
-              </div>
-
-              <div className="flex items-center justify-between">
-                <button
-                  className="text-xs text-[#a1a1aa] hover:text-[#e4e4e7] transition-colors"
-                  onClick={addPropertyEntry}
-                >
-                  {t("map.properties.add")}
-                </button>
-                <div className="flex items-center gap-1">
-                  <button
-                    className="px-3 py-1.5 rounded text-xs text-[#a1a1aa] hover:text-[#e4e4e7] hover:bg-[#27272a] transition-colors"
-                    onClick={closePropertyEditor}
-                  >
-                    {t("map.properties.cancel")}
-                  </button>
-                  <button
-                    className="px-3 py-1.5 rounded text-xs bg-[#3b82f6] text-white"
-                    onClick={savePropertyChanges}
-                  >
-                    {t("map.properties.save")}
-                  </button>
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* Style Tab Content */}
+              {activeEditorTab === "style" && (
+                <div className="flex flex-col gap-3">
+                  <div
+                    className="flex flex-col gap-3 overflow-auto property-scrollbar"
+                    style={{ maxHeight: 240 }}
+                  >
+                    {/* Point Styles */}
+                    {getSimpleGeomType(propertyEditorFeature) === "Point" && (
+                      <>
+                        {/* Marker Color */}
+                        <div className="flex items-center justify-between">
+                          <label className="text-xs text-[#a1a1aa]">
+                            {t("map.style.fillColor")}
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="color"
+                              className="w-8 h-8 rounded border border-[#27272a] bg-transparent cursor-pointer"
+                              value={featureStyle["marker-color"] || "#22d3ee"}
+                              onChange={(e) =>
+                                updateFeatureStyle(
+                                  "marker-color",
+                                  e.target.value
+                                )
+                              }
+                            />
+                            <span className="text-xs text-[#71717a] w-16">
+                              {featureStyle["marker-color"] || "#22d3ee"}
+                            </span>
+                          </div>
+                        </div>
+                        {/* Marker Size */}
+                        <div className="flex items-center justify-between">
+                          <label className="text-xs text-[#a1a1aa]">
+                            {t("map.style.size")}
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="range"
+                              min="2"
+                              max="20"
+                              step="1"
+                              className="w-24 accent-[#3b82f6]"
+                              value={featureStyle["marker-size"] || 6}
+                              onChange={(e) =>
+                                updateFeatureStyle(
+                                  "marker-size",
+                                  Number(e.target.value)
+                                )
+                              }
+                            />
+                            <span className="text-xs text-[#71717a] w-10 text-right">
+                              {featureStyle["marker-size"] || 6}px
+                            </span>
+                          </div>
+                        </div>
+                        {/* Stroke Color */}
+                        <div className="flex items-center justify-between">
+                          <label className="text-xs text-[#a1a1aa]">
+                            {t("map.style.strokeColor")}
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="color"
+                              className="w-8 h-8 rounded border border-[#27272a] bg-transparent cursor-pointer"
+                              value={featureStyle["stroke"] || "#0ea5e9"}
+                              onChange={(e) =>
+                                updateFeatureStyle("stroke", e.target.value)
+                              }
+                            />
+                            <span className="text-xs text-[#71717a] w-16">
+                              {featureStyle["stroke"] || "#0ea5e9"}
+                            </span>
+                          </div>
+                        </div>
+                        {/* Stroke Width */}
+                        <div className="flex items-center justify-between">
+                          <label className="text-xs text-[#a1a1aa]">
+                            {t("map.style.strokeWidth")}
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="range"
+                              min="0"
+                              max="10"
+                              step="0.5"
+                              className="w-24 accent-[#3b82f6]"
+                              value={featureStyle["stroke-width"] || 1.5}
+                              onChange={(e) =>
+                                updateFeatureStyle(
+                                  "stroke-width",
+                                  Number(e.target.value)
+                                )
+                              }
+                            />
+                            <span className="text-xs text-[#71717a] w-10 text-right">
+                              {featureStyle["stroke-width"] || 1.5}px
+                            </span>
+                          </div>
+                        </div>
+                      </>
+                    )}
+
+                    {/* LineString Styles */}
+                    {getSimpleGeomType(propertyEditorFeature) ===
+                      "LineString" && (
+                      <>
+                        {/* Stroke Color */}
+                        <div className="flex items-center justify-between">
+                          <label className="text-xs text-[#a1a1aa]">
+                            {t("map.style.strokeColor")}
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="color"
+                              className="w-8 h-8 rounded border border-[#27272a] bg-transparent cursor-pointer"
+                              value={featureStyle["stroke"] || "#3b82f6"}
+                              onChange={(e) =>
+                                updateFeatureStyle("stroke", e.target.value)
+                              }
+                            />
+                            <span className="text-xs text-[#71717a] w-16">
+                              {featureStyle["stroke"] || "#3b82f6"}
+                            </span>
+                          </div>
+                        </div>
+                        {/* Stroke Width */}
+                        <div className="flex items-center justify-between">
+                          <label className="text-xs text-[#a1a1aa]">
+                            {t("map.style.strokeWidth")}
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="range"
+                              min="1"
+                              max="20"
+                              step="0.5"
+                              className="w-24 accent-[#3b82f6]"
+                              value={featureStyle["stroke-width"] || 3}
+                              onChange={(e) =>
+                                updateFeatureStyle(
+                                  "stroke-width",
+                                  Number(e.target.value)
+                                )
+                              }
+                            />
+                            <span className="text-xs text-[#71717a] w-10 text-right">
+                              {featureStyle["stroke-width"] || 3}px
+                            </span>
+                          </div>
+                        </div>
+                        {/* Stroke Opacity */}
+                        <div className="flex items-center justify-between">
+                          <label className="text-xs text-[#a1a1aa]">
+                            {t("map.style.opacity")}
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="range"
+                              min="0"
+                              max="1"
+                              step="0.1"
+                              className="w-24 accent-[#3b82f6]"
+                              value={featureStyle["stroke-opacity"] ?? 1}
+                              onChange={(e) =>
+                                updateFeatureStyle(
+                                  "stroke-opacity",
+                                  Number(e.target.value)
+                                )
+                              }
+                            />
+                            <span className="text-xs text-[#71717a] w-10 text-right">
+                              {Math.round(
+                                (featureStyle["stroke-opacity"] ?? 1) * 100
+                              )}
+                              %
+                            </span>
+                          </div>
+                        </div>
+                        {/* Dash Style */}
+                        <div className="flex items-center justify-between">
+                          <label className="text-xs text-[#a1a1aa]">
+                            {t("map.style.dashStyle")}
+                          </label>
+                          <select
+                            className="bg-[#0b0b0f] border border-[#27272a] rounded px-2 py-1.5 text-xs text-[#e4e4e7] focus:outline-none focus:ring-2 focus:ring-[#3b82f6]/50"
+                            value={featureStyle["stroke-dasharray"] || "none"}
+                            onChange={(e) =>
+                              updateFeatureStyle(
+                                "stroke-dasharray",
+                                e.target.value as any
+                              )
+                            }
+                          >
+                            <option value="none">{t("map.style.none")}</option>
+                            <option value="dash">{t("map.style.dash")}</option>
+                            <option value="dot">{t("map.style.dot")}</option>
+                            <option value="dashdot">
+                              {t("map.style.dashdot")}
+                            </option>
+                          </select>
+                        </div>
+                      </>
+                    )}
+
+                    {/* Polygon Styles */}
+                    {getSimpleGeomType(propertyEditorFeature) === "Polygon" && (
+                      <>
+                        {/* Fill Color */}
+                        <div className="flex items-center justify-between">
+                          <label className="text-xs text-[#a1a1aa]">
+                            {t("map.style.fillColor")}
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="color"
+                              className="w-8 h-8 rounded border border-[#27272a] bg-transparent cursor-pointer"
+                              value={featureStyle["fill"] || "#3b82f6"}
+                              onChange={(e) =>
+                                updateFeatureStyle("fill", e.target.value)
+                              }
+                            />
+                            <span className="text-xs text-[#71717a] w-16">
+                              {featureStyle["fill"] || "#3b82f6"}
+                            </span>
+                          </div>
+                        </div>
+                        {/* Fill Opacity */}
+                        <div className="flex items-center justify-between">
+                          <label className="text-xs text-[#a1a1aa]">
+                            {t("map.style.fillOpacity")}
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="range"
+                              min="0"
+                              max="1"
+                              step="0.05"
+                              className="w-24 accent-[#3b82f6]"
+                              value={featureStyle["fill-opacity"] ?? 0.3}
+                              onChange={(e) =>
+                                updateFeatureStyle(
+                                  "fill-opacity",
+                                  Number(e.target.value)
+                                )
+                              }
+                            />
+                            <span className="text-xs text-[#71717a] w-10 text-right">
+                              {Math.round(
+                                (featureStyle["fill-opacity"] ?? 0.3) * 100
+                              )}
+                              %
+                            </span>
+                          </div>
+                        </div>
+                        {/* Stroke Color */}
+                        <div className="flex items-center justify-between">
+                          <label className="text-xs text-[#a1a1aa]">
+                            {t("map.style.strokeColor")}
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="color"
+                              className="w-8 h-8 rounded border border-[#27272a] bg-transparent cursor-pointer"
+                              value={featureStyle["stroke"] || "#3b82f6"}
+                              onChange={(e) =>
+                                updateFeatureStyle("stroke", e.target.value)
+                              }
+                            />
+                            <span className="text-xs text-[#71717a] w-16">
+                              {featureStyle["stroke"] || "#3b82f6"}
+                            </span>
+                          </div>
+                        </div>
+                        {/* Stroke Width */}
+                        <div className="flex items-center justify-between">
+                          <label className="text-xs text-[#a1a1aa]">
+                            {t("map.style.strokeWidth")}
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="range"
+                              min="0"
+                              max="10"
+                              step="0.5"
+                              className="w-24 accent-[#3b82f6]"
+                              value={featureStyle["stroke-width"] || 2}
+                              onChange={(e) =>
+                                updateFeatureStyle(
+                                  "stroke-width",
+                                  Number(e.target.value)
+                                )
+                              }
+                            />
+                            <span className="text-xs text-[#71717a] w-10 text-right">
+                              {featureStyle["stroke-width"] || 2}px
+                            </span>
+                          </div>
+                        </div>
+                        {/* Stroke Opacity */}
+                        <div className="flex items-center justify-between">
+                          <label className="text-xs text-[#a1a1aa]">
+                            {t("map.style.strokeOpacity")}
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="range"
+                              min="0"
+                              max="1"
+                              step="0.1"
+                              className="w-24 accent-[#3b82f6]"
+                              value={featureStyle["stroke-opacity"] ?? 1}
+                              onChange={(e) =>
+                                updateFeatureStyle(
+                                  "stroke-opacity",
+                                  Number(e.target.value)
+                                )
+                              }
+                            />
+                            <span className="text-xs text-[#71717a] w-10 text-right">
+                              {Math.round(
+                                (featureStyle["stroke-opacity"] ?? 1) * 100
+                              )}
+                              %
+                            </span>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  <div className="flex items-center justify-end gap-1 pt-2 border-t border-[#27272a]">
+                    <button
+                      className="px-3 py-1.5 rounded text-xs text-[#a1a1aa] hover:text-[#e4e4e7] hover:bg-[#27272a] transition-colors"
+                      onClick={closePropertyEditor}
+                    >
+                      {t("map.properties.cancel")}
+                    </button>
+                    <button
+                      className="px-3 py-1.5 rounded text-xs bg-[#3b82f6] text-white hover:bg-[#2563eb] transition-colors"
+                      onClick={saveStyleChanges}
+                    >
+                      {t("map.style.apply")}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -1626,7 +2267,13 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
                   ? t("map.baseMap.cartoLight")
                   : baseMap.id === "carto-dark"
                   ? t("map.baseMap.cartoDark")
-                  : t("map.baseMap.satellite")}
+                  : baseMap.id === "carto-voyager"
+                  ? t("map.baseMap.cartoVoyager")
+                  : baseMap.id === "arcgis-sat"
+                  ? t("map.baseMap.satellite")
+                  : baseMap.id === "arcgis-topo"
+                  ? t("map.baseMap.arcgisTopo")
+                  : t("map.baseMap.opentopo")}
               </button>
             ))}
           </div>

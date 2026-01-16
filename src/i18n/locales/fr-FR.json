@@ -227,7 +227,26 @@
       "osm": "OpenStreetMap",
       "cartoLight": "CartoDB Clair",
       "cartoDark": "CartoDB Sombre",
-      "satellite": "Satellite"
+      "cartoVoyager": "CartoDB Voyager",
+      "satellite": "Satellite",
+      "arcgisTopo": "ArcGIS Topo",
+      "opentopo": "OpenTopoMap"
+    },
+    "style": {
+      "title": "Style",
+      "fillColor": "Couleur de remplissage",
+      "strokeColor": "Couleur du contour",
+      "strokeWidth": "Épaisseur du contour",
+      "strokeOpacity": "Opacité du contour",
+      "fillOpacity": "Opacité du remplissage",
+      "opacity": "Opacité",
+      "size": "Taille",
+      "dashStyle": "Style de ligne",
+      "none": "Continu",
+      "dash": "Tirets",
+      "dot": "Pointillés",
+      "dashdot": "Tirets-points",
+      "apply": "Appliquer le style"
     }
   },
   "export": {

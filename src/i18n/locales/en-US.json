@@ -211,6 +211,7 @@
     },
     "snapshot": "Map Snapshot",
     "search": "Search location...",
+    "searchHint": "Press Enter after typing a location name to jump to the target location on the map.",
     "properties": {
       "title": "Properties",
       "noProperties": "No properties",
@@ -227,7 +228,26 @@
       "osm": "OpenStreetMap",
       "cartoLight": "CartoDB Light",
       "cartoDark": "CartoDB Dark",
-      "satellite": "Satellite"
+      "cartoVoyager": "CartoDB Voyager",
+      "satellite": "Satellite",
+      "arcgisTopo": "ArcGIS Topo",
+      "opentopo": "OpenTopoMap"
+    },
+    "style": {
+      "title": "Style",
+      "fillColor": "Fill Color",
+      "strokeColor": "Stroke Color",
+      "strokeWidth": "Stroke Width",
+      "strokeOpacity": "Stroke Opacity",
+      "fillOpacity": "Fill Opacity",
+      "opacity": "Opacity",
+      "size": "Size",
+      "dashStyle": "Dash Style",
+      "none": "Solid",
+      "dash": "Dash",
+      "dot": "Dot",
+      "dashdot": "Dash-Dot",
+      "apply": "Apply Style"
     }
   },
   "export": {

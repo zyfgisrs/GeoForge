@@ -21,6 +21,17 @@ import {
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
 
+const STYLE_KEYS = new Set([
+  "marker-color",
+  "marker-size",
+  "stroke",
+  "stroke-width",
+  "stroke-opacity",
+  "stroke-dasharray",
+  "fill",
+  "fill-opacity",
+]);
+
 interface EditorPanelProps {
   selectedProjection: string;
   onProjectionChange: (projection: string) => void;
@@ -53,7 +64,84 @@ export function EditorPanel({
     { code: "EPSG:2154", name: "Lambert-93" },
   ];
 
-  const activeText = activeTab === "geojson" ? geojsonText : wktText;
+  const displayGeojsonText = useMemo(() => {
+    if (activeTab !== "geojson") return "";
+    try {
+      const json = JSON.parse(geojsonText);
+      if (json.type === "FeatureCollection" && Array.isArray(json.features)) {
+        const cleanFeatures = json.features.map((f: any) => {
+          const props = { ...f.properties };
+          STYLE_KEYS.forEach((key) => delete props[key]);
+          return { ...f, properties: props };
+        });
+        return JSON.stringify({ ...json, features: cleanFeatures }, null, 2);
+      }
+      return geojsonText;
+    } catch {
+      return geojsonText;
+    }
+  }, [geojsonText, activeTab]);
+
+  const activeText = activeTab === "geojson" ? displayGeojsonText : wktText;
+
+  const handleGeoJSONChange = (newValue: string | undefined) => {
+    if (!newValue) {
+      setGeojsonText("");
+      return;
+    }
+
+    try {
+      const newJson = JSON.parse(newValue);
+      // We parse the current store value to get the original features with styles
+      let oldJson: any;
+      try {
+        oldJson = JSON.parse(geojsonText);
+      } catch {
+        oldJson = {};
+      }
+
+      if (
+        newJson.type === "FeatureCollection" &&
+        Array.isArray(newJson.features) &&
+        oldJson.type === "FeatureCollection" &&
+        Array.isArray(oldJson.features)
+      ) {
+        // Merge logic: restore styles from oldJson to newJson
+        const mergedFeatures = newJson.features.map(
+          (newF: any, index: number) => {
+            // Try to find matching old feature
+            // Strategy: Use ID if present, otherwise Index
+            let oldF = null;
+            if (newF.id) {
+              oldF = oldJson.features.find((f: any) => f.id === newF.id);
+            }
+            if (!oldF && oldJson.features[index]) {
+              oldF = oldJson.features[index];
+            }
+
+            if (oldF && oldF.properties) {
+              const restoredProps = { ...newF.properties };
+              STYLE_KEYS.forEach((key) => {
+                if (oldF.properties[key] !== undefined) {
+                  restoredProps[key] = oldF.properties[key];
+                }
+              });
+              return { ...newF, properties: restoredProps };
+            }
+            return newF;
+          }
+        );
+        setGeojsonText(
+          JSON.stringify({ ...newJson, features: mergedFeatures }, null, 2)
+        );
+      } else {
+        setGeojsonText(newValue);
+      }
+    } catch {
+      // If invalid JSON, just set it as is (user might be typing)
+      setGeojsonText(newValue);
+    }
+  };
   const isTooLarge = activeText.length > MAX_EDITOR_SIZE;
   const activeLines = activeText.split("\n");
   const lineHeight = 24;
@@ -80,7 +168,11 @@ export function EditorPanel({
         const props = f.getProperties();
         delete props.geometry; // Exclude geometry from attribute columns
 
-        Object.keys(props).forEach((k) => columns.add(k));
+        Object.keys(props).forEach((k) => {
+          if (!STYLE_KEYS.has(k)) {
+            columns.add(k);
+          }
+        });
 
         return {
           id: f.getId() || `f-${index}`,
@@ -375,7 +467,7 @@ export function EditorPanel({
                 onMount={handleEditorMount}
                 onChange={(value) => {
                   if (activeTab === "geojson") {
-                    setGeojsonText(value ?? "");
+                    handleGeoJSONChange(value);
                     return;
                   }
                   setWktText(value ?? "");

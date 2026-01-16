@@ -227,7 +227,26 @@
       "osm": "OpenStreetMap",
       "cartoLight": "CartoDB Light",
       "cartoDark": "CartoDB Dark",
-      "satellite": "위성"
+      "cartoVoyager": "CartoDB Voyager",
+      "satellite": "위성",
+      "arcgisTopo": "ArcGIS 지형",
+      "opentopo": "OpenTopoMap"
+    },
+    "style": {
+      "title": "스타일",
+      "fillColor": "채우기 색상",
+      "strokeColor": "선 색상",
+      "strokeWidth": "선 두께",
+      "strokeOpacity": "선 투명도",
+      "fillOpacity": "채우기 투명도",
+      "opacity": "투명도",
+      "size": "크기",
+      "dashStyle": "선 스타일",
+      "none": "실선",
+      "dash": "파선",
+      "dot": "점선",
+      "dashdot": "일점쇄선",
+      "apply": "스타일 적용"
     }
   },
   "export": {
