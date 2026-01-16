@@ -207,7 +207,8 @@
     },
     "measure": {
       "distance": "Mesurer la distance",
-      "area": "Mesurer la surface"
+      "area": "Mesurer la surface",
+      "geodesic": "Mesurer la distance (calcul ellipsoïdal)"
     },
     "snapshot": "Capture d'écran",
     "search": "Rechercher un lieu...",

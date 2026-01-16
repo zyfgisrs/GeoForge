@@ -207,7 +207,8 @@
     },
     "measure": {
       "distance": "거리 측정",
-      "area": "면적 측정"
+      "area": "면적 측정",
+      "geodesic": "거리 측정 (타원체 계산)"
     },
     "snapshot": "스냅샷",
     "search": "장소 검색...",

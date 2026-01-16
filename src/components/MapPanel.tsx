@@ -1,5 +1,6 @@
 import {
   Camera,
+  Globe,
   Layers,
   Minus,
   Plus,
@@ -32,7 +33,7 @@ import type MapBrowserEvent from "ol/MapBrowserEvent";
 import { unByKey } from "ol/Observable";
 import "ol/ol.css";
 import Overlay from "ol/Overlay";
-import { fromLonLat, transform } from "ol/proj";
+import { fromLonLat, toLonLat, transform } from "ol/proj";
 import OSM from "ol/source/OSM";
 import VectorSource from "ol/source/Vector";
 import XYZ from "ol/source/XYZ";
@@ -178,6 +179,67 @@ const BASE_MAPS: {
       'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
   },
 ];
+
+const interpolateGreatCircle = (start: number[], end: number[]) => {
+  const [lon1, lat1] = start;
+  const [lon2, lat2] = end;
+
+  // To Radians
+  const rLat1 = (lat1 * Math.PI) / 180;
+  const rLon1 = (lon1 * Math.PI) / 180;
+  const rLat2 = (lat2 * Math.PI) / 180;
+  const rLon2 = (lon2 * Math.PI) / 180;
+
+  const d =
+    2 *
+    Math.asin(
+      Math.sqrt(
+        Math.pow(Math.sin((rLat1 - rLat2) / 2), 2) +
+          Math.cos(rLat1) *
+            Math.cos(rLat2) *
+            Math.pow(Math.sin((rLon1 - rLon2) / 2), 2)
+      )
+    );
+
+  if (d === 0) return [start, end];
+
+  const points = [];
+  const segments = 100; // Fixed segmentation for smoothness
+
+  let lastLon = lon1;
+
+  for (let i = 0; i <= segments; i++) {
+    const f = i / segments;
+    const A = Math.sin((1 - f) * d) / Math.sin(d);
+    const B = Math.sin(f * d) / Math.sin(d);
+
+    const x =
+      A * Math.cos(rLat1) * Math.cos(rLon1) +
+      B * Math.cos(rLat2) * Math.cos(rLon2);
+    const y =
+      A * Math.cos(rLat1) * Math.sin(rLon1) +
+      B * Math.cos(rLat2) * Math.sin(rLon2);
+    const z = A * Math.sin(rLat1) + B * Math.sin(rLat2);
+
+    const lat = Math.atan2(z, Math.sqrt(x * x + y * y));
+    const lon = Math.atan2(y, x);
+
+    let lonDeg = (lon * 180) / Math.PI;
+
+    // Unwrap longitude
+    const delta = lonDeg - lastLon;
+    if (delta > 180) {
+      lonDeg -= 360;
+    } else if (delta < -180) {
+      lonDeg += 360;
+    }
+    lastLon = lonDeg;
+
+    points.push([lonDeg, (lat * 180) / Math.PI]);
+  }
+
+  return points;
+};
 
 const ctrlDragOnly = (event: { originalEvent: KeyboardEvent | MouseEvent }) => {
   const originalEvent = event.originalEvent;
@@ -1023,7 +1085,11 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
       measureChangeKeyRef.current = null;
     }
 
-    if (activeMeasureTool !== "distance" && activeMeasureTool !== "area") {
+    if (
+      activeMeasureTool !== "distance" &&
+      activeMeasureTool !== "area" &&
+      activeMeasureTool !== "geodesic"
+    ) {
       measureSource.clear();
       return;
     }
@@ -1071,10 +1137,62 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
 
     createMeasureTooltip();
 
+    const type = activeMeasureTool === "area" ? "Polygon" : "LineString";
+    let geometryFunction: any;
+
+    if (activeMeasureTool === "geodesic") {
+      geometryFunction = (coordinates: any, geometry: any) => {
+        if (!geometry) {
+          geometry = new LineString([]);
+        }
+
+        const flatCoords = coordinates;
+        if (flatCoords.length < 2) {
+          geometry.setCoordinates(flatCoords);
+          return geometry;
+        }
+
+        const densifiedPoints: any[] = [];
+        for (let i = 0; i < flatCoords.length - 1; i++) {
+          const start = toLonLat(flatCoords[i]);
+          const end = toLonLat(flatCoords[i + 1]);
+          const segment = interpolateGreatCircle(start, end);
+          const projectedSegment = segment.map((c) => fromLonLat(c));
+
+          // Align segment start with actual flatCoords start (handle world wrapping)
+          const startProj = flatCoords[i];
+          const calculatedStartProj = projectedSegment[0];
+
+          if (startProj && calculatedStartProj) {
+            const offsetX = startProj[0] - calculatedStartProj[0];
+            // Apply offset to all points in segment if significant drift
+            if (Math.abs(offsetX) > 100) {
+              for (let k = 0; k < projectedSegment.length; k++) {
+                projectedSegment[k] = [
+                  projectedSegment[k][0] + offsetX,
+                  projectedSegment[k][1],
+                ];
+              }
+            }
+          }
+
+          if (i > 0) {
+            projectedSegment.shift();
+          }
+          densifiedPoints.push(...projectedSegment);
+        }
+
+        geometry.setCoordinates(densifiedPoints);
+        return geometry;
+      };
+    }
+
     const draw = new Draw({
       source: measureSource,
-      type: activeMeasureTool === "area" ? "Polygon" : "LineString",
+      type,
       style: sketchStyle,
+      geometryFunction,
+      maxPoints: activeMeasureTool === "geodesic" ? 2 : undefined,
     });
     measureDrawRef.current = draw;
     map.addInteraction(draw);
@@ -1724,6 +1842,24 @@ export function MapPanel({ mapImageUrl, children }: MapPanelProps) {
             title={t("map.measure.area")}
           >
             <MeasureAreaIcon className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => {
+              const nextTool =
+                activeMeasureTool === "geodesic" ? null : "geodesic";
+              setActiveMeasureTool(nextTool);
+              if (nextTool) {
+                setActiveDrawTool(null);
+              }
+            }}
+            className={`p-2 rounded transition-colors ${
+              activeMeasureTool === "geodesic"
+                ? "bg-[#3b82f6] text-white"
+                : "text-[#e4e4e7] hover:bg-[#27272a]"
+            }`}
+            title={t("map.measure.geodesic")}
+          >
+            <Globe className="w-4 h-4" />
           </button>
         </div>
 

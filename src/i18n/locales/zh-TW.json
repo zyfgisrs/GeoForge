@@ -207,7 +207,8 @@
     },
     "measure": {
       "distance": "測量距離",
-      "area": "測量面積"
+      "area": "測量面積",
+      "geodesic": "測量距離（使用橢球體計算）"
     },
     "snapshot": "地圖快照",
     "search": "搜尋地點...",

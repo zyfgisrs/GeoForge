@@ -207,7 +207,8 @@
     },
     "measure": {
       "distance": "距離計測",
-      "area": "面積計測"
+      "area": "面積計測",
+      "geodesic": "距離計測（楕円体計算）"
     },
     "snapshot": "スナップショット",
     "search": "場所を検索...",

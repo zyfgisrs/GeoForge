@@ -207,7 +207,8 @@
     },
     "measure": {
       "distance": "Measure Distance",
-      "area": "Measure Area"
+      "area": "Measure Area",
+      "geodesic": "Measure Line (using Ellipsoidal calculation)"
     },
     "snapshot": "Map Snapshot",
     "search": "Search location...",

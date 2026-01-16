@@ -207,7 +207,8 @@
     },
     "measure": {
       "distance": "Medir Distancia",
-      "area": "Medir Área"
+      "area": "Medir Área",
+      "geodesic": "Medir distancia (cálculo elipsoidal)"
     },
     "snapshot": "Instantánea del Mapa",
     "search": "Buscar lugar...",

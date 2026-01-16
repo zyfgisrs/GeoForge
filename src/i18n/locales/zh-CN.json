@@ -207,7 +207,8 @@
     },
     "measure": {
       "distance": "测量距离",
-      "area": "测量面积"
+      "area": "测量面积",
+      "geodesic": "测量距离（使用椭球体计算）"
     },
     "snapshot": "地图快照",
     "search": "搜索地点...",
