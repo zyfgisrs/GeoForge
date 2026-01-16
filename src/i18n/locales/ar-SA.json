@@ -1,0 +1,306 @@
+{
+  "common": {
+    "import": "استيراد",
+    "export": "تصدير",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "save": "حفظ",
+    "delete": "حذف",
+    "close": "إغلاق",
+    "loading": "جاري التحميل...",
+    "error": "خطأ",
+    "success": "نجاح",
+    "copy": "نسخ",
+    "paste": "لصق",
+    "clear": "مسح",
+    "reset": "إعادة تعيين",
+    "apply": "تطبيق",
+    "search": "بحث",
+    "noData": "لا توجد بيانات",
+    "features": "عناصر",
+    "feature": "عنصر"
+  },
+  "header": {
+    "import": "استيراد",
+    "export": "تصدير"
+  },
+  "editor": {
+    "title": "محرر",
+    "geojson": "GeoJSON",
+    "wkt": "WKT",
+    "table": "جدول",
+    "collection": "مجموعة",
+    "elements": "عناصر",
+    "format": "تنسيق",
+    "validate": "تحقق",
+    "validJson": "GeoJSON صالح",
+    "invalidJson": "تنسيق JSON غير صالح",
+    "loadContent": "تحميل على أي حال",
+    "largeFile": "الملف الكبير قد يؤثر على الأداء",
+    "lineCount": "الأسطر",
+    "charCount": "الأحرف",
+    "copySuccess": "تم النسخ إلى الحافظة",
+    "copyFail": "فشل النسخ",
+    "clearAllTitle": "مسح جميع البيانات؟",
+    "clearAllDesc": "سيؤدي هذا إلى مسح محتوى المحرر وإعادة تعيينه إلى GeoJSON فارغ.",
+    "dataTooLarge": "البيانات كبيرة جداً للمعاينة",
+    "dataLargeDesc": "المحتوى يحتوي على {{length}} حرف ({{size}} ميجابايت). قد يؤدي معاينته إلى تجميد المتصفح."
+  },
+  "analysis": {
+    "title": "أدوات التحليل",
+    "buffer": "تحليل المخزن المؤقت",
+    "union": "اتحاد",
+    "intersection": "تقاطع",
+    "difference": "فرق",
+    "dissolve": "دمج",
+    "simplify": "تبسيط",
+    "convexHull": "الهيكل المحدب",
+    "centroid": "مركز الثقل",
+    "area": "مساحة",
+    "length": "طول",
+    "distance": "مسافة",
+    "bufferRadius": "نصف قطر المخزن المؤقت",
+    "units": "وحدات",
+    "meters": "متر",
+    "kilometers": "كيلومتر",
+    "miles": "ميل",
+    "feet": "قدم",
+    "inches": "بوصة",
+    "inputs": {
+      "featureCollection": "FeatureCollection",
+      "feature": "Feature",
+      "geometry": "Geometry"
+    },
+    "errors": {
+      "noInput": "لا يوجد إدخال GeoJSON.",
+      "invalidJson": "GeoJSON غير صالح.",
+      "noFeatures": "لم يتم العثور على عناصر.",
+      "emptyResult": "نتيجة {{label}} فارغة.",
+      "calculationFailed": "فشل حساب {{label}}.",
+      "invalidBufferRadius": "نصف قطر المخزن المؤقت غير صالح.",
+      "invalidSmoothIterations": "تكرارات تنعيم المضلع غير صالحة.",
+      "requiresPolygon": "يتطلب إدخال Polygon أو MultiPolygon.",
+      "requiresPoint": "يتطلب إدخال Point.",
+      "requiresPointAndPolygon": "يتطلب عناصر Point و Polygon.",
+      "unionRequiresTwo": "الاتحاد يتطلب على الأقل 2 مضلعات.",
+      "intersectRequiresTwo": "التقاطع يتطلب على الأقل 2 مضلعات.",
+      "differenceRequiresTwo": "الفرق يتطلب على الأقل 2 مضلعات.",
+      "midpointRequiresTwo": "النقطة الوسطى تتطلب بالضبط عنصري Point.",
+      "voronoiEmpty": "نتيجة فورونوي فارغة.",
+      "gridTooDense": "الشبكة كثيفة جداً (أكثر من {{countVal}} خلية). الحد الأقصى المسموح به {{maxVal}}. يرجى زيادة حجم الخلية أو تقليل المساحة.",
+      "invalidCellSide": "قيمة جانب الخلية غير صالحة."
+    },
+    "success": {
+      "measurementAdded": "تم كتابة نتائج القياس في الخصائص.",
+      "replaced": "تم استبدال محتوى المحرر بنتيجة التحليل.",
+      "added": "تمت إضافة نتيجة التحليل إلى محتوى المحرر."
+    },
+    "tools": {
+      "center": {
+        "name": "المركز",
+        "desc": "يأخذ Feature أو FeatureCollection ويعيد النقطة المركزية المطلقة لجميع العناصر."
+      },
+      "bbox": {
+        "name": "صندوق الحدود",
+        "desc": "يحسب صندوق الحدود لأي كائن GeoJSON."
+      },
+      "polygonSmooth": {
+        "name": "تنعيم المضلع",
+        "desc": "ينعم حدود المضلع مع تكرارات قابلة للتكوين."
+      },
+      "buffer": {
+        "name": "مخزن مؤقت",
+        "desc": "يحسب مخزناً مؤقتاً لعناصر الإدخال لنصف قطر معين."
+      },
+      "voronoi": {
+        "name": "فورونوي",
+        "desc": "ينشئ مضلعات فورونوي من نقاط الإدخال."
+      },
+      "simplify": {
+        "name": "تبسيط",
+        "desc": "يبسط الهندسة عن طريق إزالة الرؤوس باستخدام خوارزمية رامر-دوغلاس-بيكر."
+      },
+      "concave": {
+        "name": "الهيكل المقعّر",
+        "desc": "يأخذ مجموعة من النقاط ويعيد مضلعاً محدباً مقعراً أو MultiPolygon."
+      },
+      "union": {
+        "name": "اتحاد",
+        "desc": "يجمع بين مضلعين أو أكثر في مضلع واحد."
+      },
+      "intersect": {
+        "name": "تقاطع",
+        "desc": "يأخذ مجموعة من المضلعات ويعيد منطقة التقاطع المشتركة بينها."
+      },
+      "difference": {
+        "name": "فرق",
+        "desc": "يجد الفرق عن طريق قص المضلعات اللاحقة من الأول."
+      },
+      "midpoint": {
+        "name": "النقطة الوسطى",
+        "desc": "يأخذ نقطتين ويعيد نقطة في منتصف المسافة بينهما."
+      },
+      "measurement": {
+        "name": "قياس",
+        "desc": "يضيف خصائص المساحة (م²/كم²) والطول (م/كم) إلى العناصر."
+      },
+      "pointsWithin": {
+        "name": "نقاط داخل",
+        "desc": "يجد النقاط التي تقع داخل المضلعات المحددة."
+      },
+      "hexGrid": {
+        "name": "شبكة سداسية",
+        "desc": "ينشئ شبكة سداسية داخل صندوق الحدود."
+      },
+      "pointGrid": {
+        "name": "شبكة نقطية",
+        "desc": "ينشئ شبكة نقطية داخل صندوق الحدود."
+      },
+      "squareGrid": {
+        "name": "شبكة مربعة",
+        "desc": "ينشئ شبكة مربعة داخل صندوق الحدود."
+      },
+      "convex": {
+        "name": "محدب محيط",
+        "desc": "يحسب المحدب المحيط لعناصر الإدخال."
+      }
+    },
+    "labels": {
+      "iterations": "التكرارات",
+      "radius": "نصف القطر",
+      "tolerance": "التسامح",
+      "maxEdge": "أقصى حافة",
+      "cellSide": "جانب الخلية",
+      "replace": "استبدال المحتوى",
+      "addToMap": "إضافة إلى الخريطة",
+      "copyResult": "نسخ النتيجة",
+      "searchTools": "بحث الأدوات...",
+      "largeDataset": "تم اكتشاف مجموعة بيانات كبيرة. قد يتجمد المتصفح مؤقتاً أثناء التحديث.",
+      "merging": "جاري الدمج...",
+      "run": "تشغيل",
+      "result": "النتيجة (GeoJSON)",
+      "input": "إدخال"
+    }
+  },
+  "footerUI": {
+    "projection": "الإسقاط",
+    "coordinates": "الإحداثيات",
+    "zoom": "مستوى التكبير",
+    "scale": "مقياس",
+    "featuresCount": "{{count}} عنصر",
+    "mousePosition": "خط العرض: {{lat}}، خط الطول: {{lng}}",
+    "mousePositionXY": "س: {{x}}، ص: {{y}}"
+  },
+  "map": {
+    "drawing": {
+      "point": "رسم نقطة",
+      "line": "رسم خط",
+      "polygon": "رسم مضلع",
+      "rectangle": "رسم مستطيل",
+      "delete": "حذف المحدد",
+      "modeActive": "وضع الرسم مفعل. اضغط Esc للخروج."
+    },
+    "navigation": {
+      "zoomIn": "تكبير",
+      "zoomOut": "تصغير",
+      "resetNorth": "إعادة تعيين إلى الشمال"
+    },
+    "measure": {
+      "distance": "قياس المسافة",
+      "area": "قياس المساحة",
+      "geodesic": "قياس الخط (باستخدام الحساب الإهليلجي)"
+    },
+    "snapshot": "لقطة الخريطة",
+    "search": "بحث الموقع...",
+    "searchHint": "اضغط Enter بعد كتابة اسم الموقع للانتقال إلى الموقع المستهدف على الخريطة.",
+    "properties": {
+      "title": "الخصائص",
+      "noProperties": "لا توجد خصائص",
+      "add": "إضافة خاصية",
+      "cancel": "إلغاء",
+      "save": "حفظ",
+      "selected": "محدد. انقر مرتين أو انقر بزر الماوس الأيمن لتحرير الخصائص. Esc لإلغاء التحديد.",
+      "key": "مفتاح",
+      "value": "قيمة",
+      "remove": "إزالة"
+    },
+    "baseMap": {
+      "switch": "تبديل الخريطة الأساسية",
+      "osm": "OpenStreetMap",
+      "cartoLight": "CartoDB فاتح",
+      "cartoDark": "CartoDB داكن",
+      "cartoVoyager": "CartoDB Voyager",
+      "satellite": "القمر الصناعي",
+      "arcgisTopo": "ArcGIS طبوغرافي",
+      "opentopo": "OpenTopoMap"
+    },
+    "style": {
+      "title": "النمط",
+      "fillColor": "لون التعبئة",
+      "strokeColor": "لون الحد",
+      "strokeWidth": "عرض الحد",
+      "strokeOpacity": "شفافية الحد",
+      "fillOpacity": "شفافية التعبئة",
+      "opacity": "الشفافية",
+      "size": "الحجم",
+      "dashStyle": "نمط الشرطة",
+      "none": "ممتلئ",
+      "dash": "شرطة",
+      "dot": "نقطة",
+      "dashdot": "شرطة-نقطة",
+      "apply": "تطبيق النمط"
+    }
+  },
+  "export": {
+    "title": "تصدير",
+    "description": "تصدير بيانات GeoJSON بتنسيقات مختلفة",
+    "format": "تنسيق",
+    "filename": "اسم الملف",
+    "coordinateSystem": "نظام الإحداثيات",
+    "locked": "مقفل",
+    "download": "تحميل",
+    "error": {
+      "invalid": "بيانات GeoJSON غير صالحة",
+      "noFeatures": "لا توجد عناصر للتصدير",
+      "failed": "فشل التصدير",
+      "shpFailed": "فشل إنشاء Shapefile"
+    },
+    "success": "تم التصدير بنجاح"
+  },
+  "import": {
+    "title": "استيراد البيانات",
+    "description": "تحميل ملفات GeoJSON أو Shapefile أو WKT",
+    "dragDrop": "اسحب وأفلت ملفك هنا",
+    "or": "أو",
+    "browse": "تصفح الملفات",
+    "supportedFormats": "التنسيقات المدعومة",
+    "options": "خيارات الاستيراد",
+    "replace": "استبدال العناصر الموجودة",
+    "importBtn": "استيراد",
+    "error": {
+      "unsupported": "تنسيق ملف غير مدعوم. يرجى تحميل ملف GeoJSON أو Shapefile (ZIP) أو WKT (TXT).",
+      "invalid": "ملف GeoJSON غير صالح.",
+      "failed": "فشل قراءة الملف."
+    }
+  },
+  "language": {
+    "zh": "الصينية (المبسطة)",
+    "zh-TW": "الصينية (التقليدية)",
+    "en": "الإنجليزية",
+    "ko": "الكورية",
+    "ja": "اليابانية",
+    "fr": "الفرنسية",
+    "es": "الإسبانية",
+    "ru": "الروسية",
+    "ar": "العربية",
+    "hi": "الهندية",
+    "pt": "البرتغالية",
+    "de": "الألمانية"
+  },
+  "footer_coordinates_v2": "خط العرض: {{lat}}، خط الطول: {{lng}}",
+  "footer_coordinates_xy_v2": "س: {{x}}، ص: {{y}}",
+  "footer_lbl_lat": "خط العرض",
+  "footer_lbl_lng": "خط الطول",
+  "footer_lbl_x": "س",
+  "footer_lbl_y": "ص"
+}

@@ -286,11 +286,16 @@
   "language": {
     "zh": "中文 (简体)",
     "zh-TW": "中文 (繁体)",
-    "en": "English",
+    "en": "英语",
     "ko": "韩语",
     "ja": "日语",
     "fr": "法语",
-    "es": "西班牙语"
+    "es": "西班牙语",
+    "ru": "俄语",
+    "ar": "阿拉伯语",
+    "hi": "印地语",
+    "pt": "葡萄牙语",
+    "de": "德语"
   },
   "footer_coordinates_v2": "纬度: {{lat}}, 经度: {{lng}}",
   "footer_coordinates_xy_v2": "X: {{x}}, Y: {{y}}",

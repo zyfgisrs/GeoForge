@@ -71,6 +71,16 @@ export function Header({ onExportClick, onImportClick }: HeaderProps) {
                 ? "Français"
                 : i18n.language === "es-ES"
                 ? "Español"
+                : i18n.language === "ru-RU"
+                ? "Русский"
+                : i18n.language === "ar-SA"
+                ? "العربية"
+                : i18n.language === "hi-IN"
+                ? "हिन्दी"
+                : i18n.language === "pt-BR"
+                ? "Português"
+                : i18n.language === "de-DE"
+                ? "Deutsch"
                 : "EN"}
             </button>
           </DropdownMenuTrigger>
@@ -119,6 +129,36 @@ export function Header({ onExportClick, onImportClick }: HeaderProps) {
               className="text-[#e4e4e7] focus:bg-[#3f3f46] focus:text-white cursor-pointer"
             >
               {t("language.es")}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => changeLanguage("ru-RU")}
+              className="text-[#e4e4e7] focus:bg-[#3f3f46] focus:text-white cursor-pointer"
+            >
+              {t("language.ru")}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => changeLanguage("ar-SA")}
+              className="text-[#e4e4e7] focus:bg-[#3f3f46] focus:text-white cursor-pointer"
+            >
+              {t("language.ar")}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => changeLanguage("hi-IN")}
+              className="text-[#e4e4e7] focus:bg-[#3f3f46] focus:text-white cursor-pointer"
+            >
+              {t("language.hi")}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => changeLanguage("pt-BR")}
+              className="text-[#e4e4e7] focus:bg-[#3f3f46] focus:text-white cursor-pointer"
+            >
+              {t("language.pt")}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => changeLanguage("de-DE")}
+              className="text-[#e4e4e7] focus:bg-[#3f3f46] focus:text-white cursor-pointer"
+            >
+              {t("language.de")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

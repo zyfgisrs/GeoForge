@@ -1,0 +1,306 @@
+{
+  "common": {
+    "import": "Importar",
+    "export": "Exportar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "save": "Salvar",
+    "delete": "Excluir",
+    "close": "Fechar",
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "copy": "Copiar",
+    "paste": "Colar",
+    "clear": "Limpar",
+    "reset": "Redefinir",
+    "apply": "Aplicar",
+    "search": "Pesquisar",
+    "noData": "Sem dados",
+    "features": "Elementos",
+    "feature": "Elemento"
+  },
+  "header": {
+    "import": "Importar",
+    "export": "Exportar"
+  },
+  "editor": {
+    "title": "Editor",
+    "geojson": "GeoJSON",
+    "wkt": "WKT",
+    "table": "Tabela",
+    "collection": "Coleção",
+    "elements": "Elementos",
+    "format": "Formatar",
+    "validate": "Validar",
+    "validJson": "GeoJSON Válido",
+    "invalidJson": "Formato JSON inválido",
+    "loadContent": "Carregar de qualquer maneira",
+    "largeFile": "Arquivo grande pode afetar o desempenho",
+    "lineCount": "Linhas",
+    "charCount": "Caracteres",
+    "copySuccess": "Copiado para a área de transferência",
+    "copyFail": "Falha ao copiar",
+    "clearAllTitle": "Limpar todos os dados?",
+    "clearAllDesc": "Isso limpará o conteúdo do editor e o redefinirá para um GeoJSON vazio.",
+    "dataTooLarge": "Dados grandes demais para visualização",
+    "dataLargeDesc": "O conteúdo tem {{length}} caracteres ({{size}} MB). Visualizá-lo pode congelar o navegador."
+  },
+  "analysis": {
+    "title": "Ferramentas de Análise",
+    "buffer": "Análise de Buffer",
+    "union": "União",
+    "intersection": "Interseção",
+    "difference": "Diferença",
+    "dissolve": "Dissolver",
+    "simplify": "Simplificar",
+    "convexHull": "Envoltória Convexa",
+    "centroid": "Centróide",
+    "area": "Área",
+    "length": "Comprimento",
+    "distance": "Distância",
+    "bufferRadius": "Raio do Buffer",
+    "units": "Unidades",
+    "meters": "Metros",
+    "kilometers": "Quilômetros",
+    "miles": "Milhas",
+    "feet": "Pés",
+    "inches": "Polegadas",
+    "inputs": {
+      "featureCollection": "FeatureCollection",
+      "feature": "Feature",
+      "geometry": "Geometria"
+    },
+    "errors": {
+      "noInput": "Nenhuma entrada GeoJSON.",
+      "invalidJson": "GeoJSON inválido.",
+      "noFeatures": "Nenhum elemento encontrado.",
+      "emptyResult": "O resultado de {{label}} está vazio.",
+      "calculationFailed": "O cálculo de {{label}} falhou.",
+      "invalidBufferRadius": "O raio do buffer é inválido.",
+      "invalidSmoothIterations": "Iterações de suavização de polígono inválidas.",
+      "requiresPolygon": "Requer entrada de Polígono ou MultiPolígono.",
+      "requiresPoint": "Requer entrada de Ponto.",
+      "requiresPointAndPolygon": "Requer recursos de Ponto e Polígono.",
+      "unionRequiresTwo": "União requer pelo menos 2 polígonos.",
+      "intersectRequiresTwo": "Interseção requer pelo menos 2 polígonos.",
+      "differenceRequiresTwo": "Diferença requer pelo menos 2 polígonos.",
+      "midpointRequiresTwo": "Ponto médio requer exatamente 2 recursos de Ponto.",
+      "voronoiEmpty": "O resultado de Voronoi está vazio.",
+      "gridTooDense": "Grade muito densa (> {{countVal}} células). O máximo permitido é {{maxVal}}. Aumente o tamanho da célula ou reduza a área.",
+      "invalidCellSide": "Valor de lado da célula inválido."
+    },
+    "success": {
+      "measurementAdded": "Resultados de medição gravados nas propriedades.",
+      "replaced": "Substituído o conteúdo do editor com o resultado da análise.",
+      "added": "Adicionado resultado da análise ao conteúdo do editor."
+    },
+    "tools": {
+      "center": {
+        "name": "Centro",
+        "desc": "Toma um Feature ou FeatureCollection e retorna o ponto central absoluto de todos os elementos."
+      },
+      "bbox": {
+        "name": "BBox",
+        "desc": "Calcula a caixa delimitadora para qualquer objeto GeoJSON."
+      },
+      "polygonSmooth": {
+        "name": "Suavizar Polígono",
+        "desc": "Suaviza os limites do polígono com iterações configuráveis."
+      },
+      "buffer": {
+        "name": "Buffer",
+        "desc": "Calcula um buffer para os elementos de entrada para um determinado raio."
+      },
+      "voronoi": {
+        "name": "Voronoi",
+        "desc": "Cria polígonos de Voronoi a partir de pontos de entrada."
+      },
+      "simplify": {
+        "name": "Simplificar",
+        "desc": "Simplifica a geometria removendo vértices usando o algoritmo Ramer-Douglas-Peucker."
+      },
+      "concave": {
+        "name": "Côncavo",
+        "desc": "Toma um conjunto de pontos e retorna um Polígono ou MultiPolígono de casca côncava."
+      },
+      "union": {
+        "name": "União",
+        "desc": "Combina dois ou mais polígonos em um único polígono."
+      },
+      "intersect": {
+        "name": "Interseção",
+        "desc": "Toma um conjunto de polígonos e retorna sua área de interseção comum."
+      },
+      "difference": {
+        "name": "Diferença",
+        "desc": "Encontra a diferença recortando polígonos subsequentes do primeiro."
+      },
+      "midpoint": {
+        "name": "Ponto Médio",
+        "desc": "Toma dois pontos e retorna um ponto no meio deles."
+      },
+      "measurement": {
+        "name": "Medição",
+        "desc": "Adiciona propriedades de Área (m²/km²) e Comprimento (m/km) aos elementos."
+      },
+      "pointsWithin": {
+        "name": "Pontos Dentro",
+        "desc": "Encontra pontos que caem dentro dos polígonos fornecidos."
+      },
+      "hexGrid": {
+        "name": "Grade Hexagonal",
+        "desc": "Gera uma grade hexagonal dentro da caixa delimitadora."
+      },
+      "pointGrid": {
+        "name": "Grade de Pontos",
+        "desc": "Gera uma grade de pontos dentro da caixa delimitadora."
+      },
+      "squareGrid": {
+        "name": "Grade Quadrada",
+        "desc": "Gera uma grade quadrada dentro da caixa delimitadora."
+      },
+      "convex": {
+        "name": "Envoltória Convexa",
+        "desc": "Calcula a envoltória convexa dos elementos de entrada."
+      }
+    },
+    "labels": {
+      "iterations": "Iterações",
+      "radius": "Raio",
+      "tolerance": "Tolerância",
+      "maxEdge": "Borda Máxima",
+      "cellSide": "Lado da Célula",
+      "replace": "Substituir Conteúdo",
+      "addToMap": "Adicionar ao Mapa",
+      "copyResult": "Copiar Resultado",
+      "searchTools": "Pesquisar ferramentas...",
+      "largeDataset": "Conjunto de dados grande detectado. O navegador pode congelar temporariamente durante a atualização.",
+      "merging": "Mesclando...",
+      "run": "Executar",
+      "result": "Resultado (GeoJSON)",
+      "input": "Entrada"
+    }
+  },
+  "footerUI": {
+    "projection": "Projeção",
+    "coordinates": "Coordenadas",
+    "zoom": "Nível de Zoom",
+    "scale": "Escala",
+    "featuresCount": "{{count}} Elementos",
+    "mousePosition": "Lat: {{lat}}, Lng: {{lng}}",
+    "mousePositionXY": "X: {{x}}, Y: {{y}}"
+  },
+  "map": {
+    "drawing": {
+      "point": "Desenhar Ponto",
+      "line": "Desenhar Linha",
+      "polygon": "Desenhar Polígono",
+      "rectangle": "Desenhar Retângulo",
+      "delete": "Excluir Selecionado",
+      "modeActive": "Modo de desenho ativo. Pressione Esc para sair."
+    },
+    "navigation": {
+      "zoomIn": "Ampliar",
+      "zoomOut": "Reduzir",
+      "resetNorth": "Redefinir Norte"
+    },
+    "measure": {
+      "distance": "Medir Distância",
+      "area": "Medir Área",
+      "geodesic": "Medir Linha (usando cálculo Elipsoidal)"
+    },
+    "snapshot": "Instantâneo do Mapa",
+    "search": "Pesquisar localização...",
+    "searchHint": "Pressione Enter após digitar um nome de local para pular para o local de destino no mapa.",
+    "properties": {
+      "title": "Propriedades",
+      "noProperties": "Sem propriedades",
+      "add": "Adicionar propriedade",
+      "cancel": "Cancelar",
+      "save": "Salvar",
+      "selected": "Selecionado. Clique duas vezes ou clique com o botão direito para editar propriedades. Esc para desmarcar.",
+      "key": "chave",
+      "value": "valor",
+      "remove": "Remover"
+    },
+    "baseMap": {
+      "switch": "Trocar Mapa Base",
+      "osm": "OpenStreetMap",
+      "cartoLight": "CartoDB Light",
+      "cartoDark": "CartoDB Dark",
+      "cartoVoyager": "CartoDB Voyager",
+      "satellite": "Satélite",
+      "arcgisTopo": "ArcGIS Topo",
+      "opentopo": "OpenTopoMap"
+    },
+    "style": {
+      "title": "Estilo",
+      "fillColor": "Cor de Preenchimento",
+      "strokeColor": "Cor do Contorno",
+      "strokeWidth": "Largura do Contorno",
+      "strokeOpacity": "Opacidade do Contorno",
+      "fillOpacity": "Opacidade do Preenchimento",
+      "opacity": "Opacidade",
+      "size": "Tamanho",
+      "dashStyle": "Estilo do Traço",
+      "none": "Sólido",
+      "dash": "Traço",
+      "dot": "Ponto",
+      "dashdot": "Traço-Ponto",
+      "apply": "Aplicar Estilo"
+    }
+  },
+  "export": {
+    "title": "Exportar",
+    "description": "Exporte seus dados GeoJSON em vários formatos",
+    "format": "Formato",
+    "filename": "Nome do Arquivo",
+    "coordinateSystem": "Sistema de Coordenadas",
+    "locked": "Bloqueado",
+    "download": "Baixar",
+    "error": {
+      "invalid": "Dados GeoJSON inválidos",
+      "noFeatures": "Nenhum elemento para exportar",
+      "failed": "Falha na exportação",
+      "shpFailed": "Falha ao gerar Shapefile"
+    },
+    "success": "Exportação bem-sucedida"
+  },
+  "import": {
+    "title": "Importar Dados",
+    "description": "Carregar arquivos GeoJSON, Shapefile ou WKT",
+    "dragDrop": "Arraste e solte seu arquivo aqui",
+    "or": "ou",
+    "browse": "Procurar Arquivos",
+    "supportedFormats": "Formatos Suportados",
+    "options": "Opções de Importação",
+    "replace": "Substituir elementos existentes",
+    "importBtn": "Importar",
+    "error": {
+      "unsupported": "Formato de arquivo não suportado. Carregue um arquivo GeoJSON, Shapefile (ZIP) ou WKT (TXT).",
+      "invalid": "Arquivo GeoJSON inválido.",
+      "failed": "Falha ao ler o arquivo."
+    }
+  },
+  "language": {
+    "zh": "Chinês (Simplificado)",
+    "zh-TW": "Chinês (Tradicional)",
+    "en": "Inglês",
+    "ko": "Coreano",
+    "ja": "Japonês",
+    "fr": "Francês",
+    "es": "Espanhol",
+    "ru": "Russo",
+    "ar": "Árabe",
+    "hi": "Hindi",
+    "pt": "Português",
+    "de": "Alemão"
+  },
+  "footer_coordinates_v2": "Lat: {{lat}}, Lng: {{lng}}",
+  "footer_coordinates_xy_v2": "X: {{x}}, Y: {{y}}",
+  "footer_lbl_lat": "Lat",
+  "footer_lbl_lng": "Lng",
+  "footer_lbl_x": "X",
+  "footer_lbl_y": "Y"
+}

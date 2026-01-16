@@ -290,7 +290,12 @@
     "ko": "Coreano",
     "ja": "Japonés",
     "fr": "Francés",
-    "es": "Español"
+    "es": "Español",
+    "ru": "Ruso",
+    "ar": "Árabe",
+    "hi": "Hindi",
+    "pt": "Portugués",
+    "de": "Alemán"
   },
   "footer_coordinates_v2": "Lat: {{lat}}, Lon: {{lng}}",
   "footer_coordinates_xy_v2": "X: {{x}}, Y: {{y}}",

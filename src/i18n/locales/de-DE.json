@@ -1,0 +1,306 @@
+{
+  "common": {
+    "import": "Importieren",
+    "export": "Exportieren",
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen",
+    "save": "Speichern",
+    "delete": "Löschen",
+    "close": "Schließen",
+    "loading": "Laden...",
+    "error": "Fehler",
+    "success": "Erfolg",
+    "copy": "Kopieren",
+    "paste": "Einfügen",
+    "clear": "Löschen",
+    "reset": "Zurücksetzen",
+    "apply": "Anwenden",
+    "search": "Suchen",
+    "noData": "Keine Daten",
+    "features": "Features",
+    "feature": "Feature"
+  },
+  "header": {
+    "import": "Importieren",
+    "export": "Exportieren"
+  },
+  "editor": {
+    "title": "Editor",
+    "geojson": "GeoJSON",
+    "wkt": "WKT",
+    "table": "Tabelle",
+    "collection": "Sammlung",
+    "elements": "Elemente",
+    "format": "Formatieren",
+    "validate": "Validieren",
+    "validJson": "Gültiges GeoJSON",
+    "invalidJson": "Ungültiges JSON-Format",
+    "loadContent": "Trotzdem laden",
+    "largeFile": "Große Datei kann die Leistung beeinträchtigen",
+    "lineCount": "Zeilen",
+    "charCount": "Zeichen",
+    "copySuccess": "In die Zwischenablage kopiert",
+    "copyFail": "Kopieren fehlgeschlagen",
+    "clearAllTitle": "Alle Daten löschen?",
+    "clearAllDesc": "Dies wird den Editor-Inhalt löschen und auf ein leeres GeoJSON zurücksetzen.",
+    "dataTooLarge": "Daten zu groß für Vorschau",
+    "dataLargeDesc": "Der Inhalt hat {{length}} Zeichen ({{size}} MB). Das Anzeigen kann den Browser einfrieren."
+  },
+  "analysis": {
+    "title": "Analysewerkzeuge",
+    "buffer": "Pufferanalyse",
+    "union": "Vereinigung",
+    "intersection": "Schnittmenge",
+    "difference": "Differenz",
+    "dissolve": "Auflösen",
+    "simplify": "Vereinfachen",
+    "convexHull": "Konvexe Hülle",
+    "centroid": "Schwerpunkt",
+    "area": "Fläche",
+    "length": "Länge",
+    "distance": "Abstand",
+    "bufferRadius": "Pufferradius",
+    "units": "Einheiten",
+    "meters": "Meter",
+    "kilometers": "Kilometer",
+    "miles": "Meilen",
+    "feet": "Fuß",
+    "inches": "Zoll",
+    "inputs": {
+      "featureCollection": "FeatureCollection",
+      "feature": "Feature",
+      "geometry": "Geometrie"
+    },
+    "errors": {
+      "noInput": "Keine GeoJSON-Eingabe.",
+      "invalidJson": "Ungültiges GeoJSON.",
+      "noFeatures": "Keine Features gefunden.",
+      "emptyResult": "{{label}} Ergebnis ist leer.",
+      "calculationFailed": "{{label}} Berechnung fehlgeschlagen.",
+      "invalidBufferRadius": "Pufferradius ist ungültig.",
+      "invalidSmoothIterations": "Polygon-Glättungsiterationen ungültig.",
+      "requiresPolygon": "Erfordert Polygon oder MultiPolygon-Eingabe.",
+      "requiresPoint": "Erfordert Punkt-Eingabe.",
+      "requiresPointAndPolygon": "Erfordert Punkt- und Polygon-Features.",
+      "unionRequiresTwo": "Vereinigung erfordert mindestens 2 Polygone.",
+      "intersectRequiresTwo": "Schnittmenge erfordert mindestens 2 Polygone.",
+      "differenceRequiresTwo": "Differenz erfordert mindestens 2 Polygone.",
+      "midpointRequiresTwo": "Mittelpunkt erfordert genau 2 Punkt-Features.",
+      "voronoiEmpty": "Voronoi-Ergebnis ist leer.",
+      "gridTooDense": "Raster zu dicht (> {{countVal}} Zellen). Maximum ist {{maxVal}}. Bitte Zellengröße erhöhen oder Bereich reduzieren.",
+      "invalidCellSide": "Ungültiger Wert für Zellenseite."
+    },
+    "success": {
+      "measurementAdded": "Messergebnisse in Eigenschaften geschrieben.",
+      "replaced": "Editor-Inhalt durch Analyse-Ergebnis ersetzt.",
+      "added": "Analyse-Ergebnis zum Editor-Inhalt hinzugefügt."
+    },
+    "tools": {
+      "center": {
+        "name": "Mitte",
+        "desc": "Nimmt ein Feature oder eine FeatureCollection und gibt den absoluten Mittelpunkt aller Features zurück."
+      },
+      "bbox": {
+        "name": "BBox",
+        "desc": "Berechnet das Begrenzungsrechteck für jedes GeoJSON-Objekt."
+      },
+      "polygonSmooth": {
+        "name": "Polygon Glätten",
+        "desc": "Glättet Polygon-Grenzen mit konfigurierbaren Iterationen."
+      },
+      "buffer": {
+        "name": "Puffer",
+        "desc": "Berechnet einen Puffer für Eingabe-Features für einen angegebenen Radius."
+      },
+      "voronoi": {
+        "name": "Voronoi",
+        "desc": "Erstellt Voronoi-Polygone aus Eingabepunkten."
+      },
+      "simplify": {
+        "name": "Vereinfachen",
+        "desc": "Vereinfacht Geometrie durch Entfernen von Scheitelpunkten mit dem Ramer-Douglas-Peucker-Algorithmus."
+      },
+      "concave": {
+        "name": "Konkav",
+        "desc": "Nimmt eine Menge von Punkten und gibt ein konkaves Hüllen-Polygon oder MultiPolygon zurück."
+      },
+      "union": {
+        "name": "Vereinigung",
+        "desc": "Kombiniert zwei oder mehr Polygone zu einem einzigen Polygon."
+      },
+      "intersect": {
+        "name": "Schnittmenge",
+        "desc": "Nimmt eine Menge von Polygonen und gibt ihren gemeinsamen Schnittpunkt zurück."
+      },
+      "difference": {
+        "name": "Differenz",
+        "desc": "Findet die Differenz, indem nachfolgende Polygone vom ersten ausgeschnitten werden."
+      },
+      "midpoint": {
+        "name": "Mittelpunkt",
+        "desc": "Nimmt zwei Punkte und gibt einen Punkt dazwischen zurück."
+      },
+      "measurement": {
+        "name": "Messung",
+        "desc": "Fügt Fläche (m²/km²) und Länge (m/km) Eigenschaften zu Features hinzu."
+      },
+      "pointsWithin": {
+        "name": "Punkte innerhalb",
+        "desc": "Findet Punkte, die innerhalb der angegebenen Polygone liegen."
+      },
+      "hexGrid": {
+        "name": "Hexagonalraster",
+        "desc": "Erzeugt ein sechseckiges Raster innerhalb des Begrenzungsrechtecks."
+      },
+      "pointGrid": {
+        "name": "Punktraster",
+        "desc": "Erzeugt ein Punktraster innerhalb des Begrenzungsrechtecks."
+      },
+      "squareGrid": {
+        "name": "Quadratraster",
+        "desc": "Erzeugt ein Quadratraster innerhalb des Begrenzungsrechtecks."
+      },
+      "convex": {
+        "name": "Konvexe Hülle",
+        "desc": "Berechnet die konvexe Hülle der Eingabe-Features."
+      }
+    },
+    "labels": {
+      "iterations": "Iterationen",
+      "radius": "Radius",
+      "tolerance": "Toleranz",
+      "maxEdge": "Max Kante",
+      "cellSide": "Zellenseite",
+      "replace": "Inhalt ersetzen",
+      "addToMap": "Zur Karte hinzufügen",
+      "copyResult": "Ergebnis kopieren",
+      "searchTools": "Werkzeuge suchen...",
+      "largeDataset": "Großer Datensatz erkannt. Der Browser kann beim Aktualisieren kurz einfrieren.",
+      "merging": "Zusammenführen...",
+      "run": "Ausführen",
+      "result": "Ergebnis (GeoJSON)",
+      "input": "Eingabe"
+    }
+  },
+  "footerUI": {
+    "projection": "Projektion",
+    "coordinates": "Koordinaten",
+    "zoom": "Zoomstufe",
+    "scale": "Maßstab",
+    "featuresCount": "{{count}} Features",
+    "mousePosition": "Lat: {{lat}}, Lng: {{lng}}",
+    "mousePositionXY": "X: {{x}}, Y: {{y}}"
+  },
+  "map": {
+    "drawing": {
+      "point": "Punkt zeichnen",
+      "line": "Linie zeichnen",
+      "polygon": "Polygon zeichnen",
+      "rectangle": "Rechteck zeichnen",
+      "delete": "Auswahl löschen",
+      "modeActive": "Zeichenmodus aktiv. Drücken Sie Esc zum Beenden."
+    },
+    "navigation": {
+      "zoomIn": "Vergrößern",
+      "zoomOut": "Verkleinern",
+      "resetNorth": "Norden zurücksetzen"
+    },
+    "measure": {
+      "distance": "Abstand messen",
+      "area": "Fläche messen",
+      "geodesic": "Linie messen (mit Ellipsoid-Berechnung)"
+    },
+    "snapshot": "Karten-Snapshot",
+    "search": "Standort suchen...",
+    "searchHint": "Drücken Sie nach der Eingabe eines Standortnamens Enter, um zum Zielstandort auf der Karte zu springen.",
+    "properties": {
+      "title": "Eigenschaften",
+      "noProperties": "Keine Eigenschaften",
+      "add": "Eigenschaft hinzufügen",
+      "cancel": "Abbrechen",
+      "save": "Speichern",
+      "selected": "Ausgewählt. Doppelklick oder Rechtsklick zum Bearbeiten. Esc zum Aufheben.",
+      "key": "Schlüssel",
+      "value": "Wert",
+      "remove": "Entfernen"
+    },
+    "baseMap": {
+      "switch": "Basiskarte wechseln",
+      "osm": "OpenStreetMap",
+      "cartoLight": "CartoDB Light",
+      "cartoDark": "CartoDB Dark",
+      "cartoVoyager": "CartoDB Voyager",
+      "satellite": "Satellit",
+      "arcgisTopo": "ArcGIS Topo",
+      "opentopo": "OpenTopoMap"
+    },
+    "style": {
+      "title": "Stil",
+      "fillColor": "Füllfarbe",
+      "strokeColor": "Kantenfarbe",
+      "strokeWidth": "Kantenbreite",
+      "strokeOpacity": "Kantenopazität",
+      "fillOpacity": "Füllopazität",
+      "opacity": "Opazität",
+      "size": "Größe",
+      "dashStyle": "Strichstil",
+      "none": "Durchgehend",
+      "dash": "Gestrichelt",
+      "dot": "Gepunktet",
+      "dashdot": "Strich-Punkt",
+      "apply": "Stil anwenden"
+    }
+  },
+  "export": {
+    "title": "Exportieren",
+    "description": "Exportieren Sie Ihre GeoJSON-Daten in verschiedenen Formaten",
+    "format": "Format",
+    "filename": "Dateiname",
+    "coordinateSystem": "Koordinatensystem",
+    "locked": "Gesperrt",
+    "download": "Herunterladen",
+    "error": {
+      "invalid": "Ungültige GeoJSON-Daten",
+      "noFeatures": "Keine Features zum Exportieren",
+      "failed": "Export fehlgeschlagen",
+      "shpFailed": "Shapefile konnte nicht erstellt werden"
+    },
+    "success": "Export erfolgreich"
+  },
+  "import": {
+    "title": "Daten importieren",
+    "description": "GeoJSON-, Shapefile- oder WKT-Dateien hochladen",
+    "dragDrop": "Datei hierher ziehen und ablegen",
+    "or": "oder",
+    "browse": "Dateien durchsuchen",
+    "supportedFormats": "Unterstützte Formate",
+    "options": "Importoptionen",
+    "replace": "Vorhandene Features ersetzen",
+    "importBtn": "Importieren",
+    "error": {
+      "unsupported": "Nicht unterstütztes Dateiformat. Laden Sie eine GeoJSON-, Shapefile (ZIP)- oder WKT (TXT)-Datei hoch.",
+      "invalid": "Ungültige GeoJSON-Datei.",
+      "failed": "Datei konnte nicht gelesen werden."
+    }
+  },
+  "language": {
+    "zh": "Chinesisch (Vereinfacht)",
+    "zh-TW": "Chinesisch (Traditionell)",
+    "en": "Englisch",
+    "ko": "Koreanisch",
+    "ja": "Japanisch",
+    "fr": "Französisch",
+    "es": "Spanisch",
+    "ru": "Russisch",
+    "ar": "Arabisch",
+    "hi": "Hindi",
+    "pt": "Portugiesisch",
+    "de": "Deutsch"
+  },
+  "footer_coordinates_v2": "Lat: {{lat}}, Lng: {{lng}}",
+  "footer_coordinates_xy_v2": "X: {{x}}, Y: {{y}}",
+  "footer_lbl_lat": "Lat",
+  "footer_lbl_lng": "Lng",
+  "footer_lbl_x": "X",
+  "footer_lbl_y": "Y"
+}
