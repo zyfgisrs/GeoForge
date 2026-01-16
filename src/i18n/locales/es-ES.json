@@ -211,6 +211,7 @@
     },
     "snapshot": "Instantánea del Mapa",
     "search": "Buscar lugar...",
+    "searchHint": "Presione Enter después de escribir el nombre de un lugar para ir a la ubicación de destino en el mapa.",
     "properties": {
       "title": "Propiedades",
       "noProperties": "Sin propiedades",

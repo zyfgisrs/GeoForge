@@ -211,6 +211,7 @@
     },
     "snapshot": "スナップショット",
     "search": "場所を検索...",
+    "searchHint": "場所名を入力してEnterキーを押すと、地図上のその場所に移動します。",
     "properties": {
       "title": "属性",
       "noProperties": "属性なし",

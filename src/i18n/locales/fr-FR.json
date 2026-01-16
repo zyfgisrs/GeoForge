@@ -211,6 +211,7 @@
     },
     "snapshot": "Capture d'écran",
     "search": "Rechercher un lieu...",
+    "searchHint": "Appuyez sur Entrée après avoir saisi un nom de lieu pour accéder à l'emplacement cible sur la carte.",
     "properties": {
       "title": "Propriétés",
       "noProperties": "Aucune propriété",

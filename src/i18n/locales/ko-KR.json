@@ -211,6 +211,7 @@
     },
     "snapshot": "스냅샷",
     "search": "장소 검색...",
+    "searchHint": "장소 이름을 입력하고 Enter 키를 누르면 지도가 해당 위치로 이동합니다.",
     "properties": {
       "title": "속성",
       "noProperties": "속성 없음",
