@@ -1,3 +1,5 @@
+"use client";
+
 import { ChevronDown, Crosshair, Globe } from "lucide-react";
 import GeoJSON from "ol/format/GeoJSON";
 import { useMemo, useState } from "react";

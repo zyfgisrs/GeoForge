@@ -1,3 +1,5 @@
+"use client";
+
 import { AlertCircle, Download, FileJson, Lock, X } from "lucide-react";
 import GeoJSON from "ol/format/GeoJSON";
 import KML from "ol/format/KML";

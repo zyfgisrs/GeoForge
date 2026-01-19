@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "import": "Importieren",
     "export": "Exportieren",
@@ -249,6 +249,9 @@
       "dot": "Gepunktet",
       "dashdot": "Strich-Punkt",
       "apply": "Stil anwenden"
+    },
+    "analysis": {
+      "title": "Räumliche Analyse"
     }
   },
   "export": {

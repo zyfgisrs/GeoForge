@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+/* Custom utilities */
+@layer utilities {
+  .no-spinner::-webkit-inner-spin-button,
+  .no-spinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .no-spinner {
+    -moz-appearance: textfield;
+  }
+}
+
+/* Custom CSS Variables for ShadCN theme */
+:root {
+  --background: #18181b;
+  --foreground: #e4e4e7;
+  --border: #27272a;
+  --ring: #3b82f6;
+  --radius: 0.5rem;
+
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+
+  --secondary: #27272a;
+  --secondary-foreground: #e4e4e7;
+
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+
+  --accent: #27272a;
+  --accent-foreground: #e4e4e7;
+
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+
+  --card: #18181b;
+  --card-foreground: #e4e4e7;
+
+  --popover: #18181b;
+  --popover-foreground: #e4e4e7;
+
+  --input: #27272a;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Editor scrollbar styling */
+.editor-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.editor-scrollbar::-webkit-scrollbar-track {
+  background: #0b0b0f;
+}
+
+.editor-scrollbar::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 4px;
+}
+
+.editor-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}

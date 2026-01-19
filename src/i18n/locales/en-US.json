@@ -249,6 +249,9 @@
       "dot": "Dot",
       "dashdot": "Dash-Dot",
       "apply": "Apply Style"
+    },
+    "analysis": {
+      "title": "Spatial Analysis"
     }
   },
   "export": {

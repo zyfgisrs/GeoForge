@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "import": "Importer",
     "export": "Exporter",
@@ -249,6 +249,9 @@
       "dot": "Pointillés",
       "dashdot": "Tirets-points",
       "apply": "Appliquer le style"
+    },
+    "analysis": {
+      "title": "Analyse spatiale"
     }
   },
   "export": {

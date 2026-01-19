@@ -249,6 +249,9 @@
       "dot": "點線",
       "dashdot": "點劃線",
       "apply": "套用樣式"
+    },
+    "analysis": {
+      "title": "空間分析"
     }
   },
   "export": {

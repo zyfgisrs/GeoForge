@@ -1,3 +1,5 @@
+"use client";
+
 import Editor, {
   type BeforeMount,
   type Monaco,

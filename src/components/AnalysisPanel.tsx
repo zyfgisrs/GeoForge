@@ -1,3 +1,5 @@
+"use client";
+
 import Editor, { type BeforeMount, type Monaco } from "@monaco-editor/react";
 import {
   bboxPolygon,
@@ -32,7 +34,6 @@ import {
   RefreshCw,
   X,
 } from "lucide-react";
-import { editor } from "monaco-editor";
 import { isEmpty as isExtentEmpty } from "ol/extent";
 import type Feature from "ol/Feature";
 import GeoJSON from "ol/format/GeoJSON";
@@ -1631,9 +1632,9 @@ export function AnalysisPanel({
             value={hexGridUnits}
             onChange={(event) => setHexGridUnits(event.target.value)}
           >
-            <option value="meters">meters</option>
-            <option value="kilometers">kilometers</option>
-            <option value="miles">miles</option>
+            <option value="meters">{t("analysis.meters")}</option>
+            <option value="kilometers">{t("analysis.kilometers")}</option>
+            <option value="miles">{t("analysis.miles")}</option>
           </select>
         </div>
       ),
@@ -1882,7 +1883,6 @@ export function AnalysisPanel({
                 quickSuggestions: false,
                 suggestOnTriggerCharacters: false,
                 links: false,
-                lightbulb: { enabled: editor.ShowLightbulbIconMode.Off },
                 matchBrackets: "never",
                 automaticLayout: true,
               }}

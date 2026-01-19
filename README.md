@@ -3,9 +3,10 @@
 <div align="center">
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-18.3.1-61DAFB?style=flat&logo=react)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.6.3-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
-[![OpenLayers](https://img.shields.io/badge/OpenLayers-9.2.4-EF3C2D?style=flat&logo=openstreetmap)](https://openlayers.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
+[![OpenLayers](https://img.shields.io/badge/OpenLayers-10.7-EF3C2D?style=flat&logo=openstreetmap)](https://openlayers.org/)
 
 **A modern, high-performance web application for creating, editing, analyzing, and visualizing geospatial data**
 
@@ -30,6 +31,7 @@
 - [Tech Stack](#tech-stack)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Deployment](#deployment)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [License](#license)
@@ -39,11 +41,12 @@
 
 ## About
 
-GeoForge (formerly GeoJSON Tool) is a modern, high-performance web application designed for creating, editing, analyzing, and visualizing geospatial data. Built with React and OpenLayers, it provides a seamless experience for working with GeoJSON, WKT, Shapefile, and other spatial formats.
+GeoForge (formerly GeoJSON Tool) is a modern, high-performance web application designed for creating, editing, analyzing, and visualizing geospatial data. Built with **Next.js 15**, **React**, and **OpenLayers**, it provides a seamless experience for working with GeoJSON, WKT, Shapefile, and other spatial formats.
 
 ### Key Highlights
 
 - 🚀 **High Performance**: Optimized rendering and data processing for large datasets
+- 🔍 **SEO Optimized**: Built with Next.js for better search engine visibility
 - 🌍 **Multi-Language Support**: 12 languages including English, Chinese, Japanese, Korean, and more
 - 🎨 **Modern UI**: Clean, professional interface built with shadcn/ui and Tailwind CSS
 - 🔧 **Powerful Tools**: Advanced spatial analysis, editing, and visualization capabilities
@@ -90,14 +93,14 @@ GeoForge (formerly GeoJSON Tool) is a modern, high-performance web application d
 
 Built-in advanced geospatial analysis tools powered by **Turf.js**:
 
-| Category | Tools |
-|----------|-------|
-| **Basic Operations** | Center, Bounding Box (BBox) |
-| **Geometry Operations** | Buffer, Polygon Smooth, Concave/Convex Hull, Simplify |
-| **Spatial Relations** | Points Within Polygon, Union, Intersection, Difference |
-| **Grid Generation** | Hex Grid, Point Grid, Square Grid |
-| **Voronoi Diagram** | Create Voronoi polygons from input points |
-| **Measurement** | Calculate Area (m²/km²) and Length (m/km) as feature properties |
+| Category                | Tools                                                           |
+| ----------------------- | --------------------------------------------------------------- |
+| **Basic Operations**    | Center, Bounding Box (BBox)                                     |
+| **Geometry Operations** | Buffer, Polygon Smooth, Concave/Convex Hull, Simplify           |
+| **Spatial Relations**   | Points Within Polygon, Union, Intersection, Difference          |
+| **Grid Generation**     | Hex Grid, Point Grid, Square Grid                               |
+| **Voronoi Diagram**     | Create Voronoi polygons from input points                       |
+| **Measurement**         | Calculate Area (m²/km²) and Length (m/km) as feature properties |
 
 All analysis results are immediately visualized on the map and provided as downloadable GeoJSON.
 
@@ -107,7 +110,6 @@ All analysis results are immediately visualized on the map and provided as downl
   - GeoJSON (`.json`, `.geojson`)
   - Shapefile (`.zip` archive with `.shp`, `.shx`, `.dbf`)
   - WKT (`.wkt`, `.txt`)
-  
 - **Export Formats**:
   - GeoJSON
   - Shapefile (Zipped)
@@ -142,18 +144,19 @@ GeoForge supports **12 languages**:
 
 ## Tech Stack
 
-| Category | Technology |
-|----------|-----------|
-| **Frontend Framework** | [React](https://react.dev/) 18.3.1 + [Vite](https://vitejs.dev/) |
-| **Language** | [TypeScript](https://www.typescriptlang.org/) 5.6.3 |
-| **Map Engine** | [OpenLayers](https://openlayers.org/) 9.2.4 |
-| **Geospatial Analysis** | [Turf.js](https://turfjs.org/) |
-| **Code Editor** | [Monaco Editor](https://microsoft.github.io/monaco-editor/) |
+| Category                 | Technology                                                                        |
+| ------------------------ | --------------------------------------------------------------------------------- |
+| **Framework**            | [Next.js](https://nextjs.org/) 15.5 (App Router)                                  |
+| **Frontend**             | [React](https://react.dev/) 18.3.1                                                |
+| **Language**             | [TypeScript](https://www.typescriptlang.org/) 5.5                                 |
+| **Map Engine**           | [OpenLayers](https://openlayers.org/) 10.7                                        |
+| **Geospatial Analysis**  | [Turf.js](https://turfjs.org/) 7.3                                                |
+| **Code Editor**          | [Monaco Editor](https://microsoft.github.io/monaco-editor/)                       |
 | **Internationalization** | [i18next](https://www.i18next.com/) + [react-i18next](https://react.i18next.com/) |
-| **Styling** | [Tailwind CSS](https://tailwindcss.com/) |
-| **UI Components** | [shadcn/ui](https://ui.shadcn.com/) |
-| **State Management** | [Zustand](https://github.com/pmndrs/zustand) |
-| **Icons** | [Lucide React](https://lucide.dev/) |
+| **Styling**              | [Tailwind CSS](https://tailwindcss.com/) 4.x                                      |
+| **UI Components**        | [shadcn/ui](https://ui.shadcn.com/)                                               |
+| **State Management**     | [Zustand](https://github.com/pmndrs/zustand)                                      |
+| **Icons**                | [Lucide React](https://lucide.dev/)                                               |
 
 ---
 
@@ -162,7 +165,7 @@ GeoForge supports **12 languages**:
 ### Prerequisites
 
 - **Node.js** v18 or higher recommended
-- **npm** or **yarn** package manager
+- **npm** or **yarn** or **pnpm** package manager
 
 ### Quick Start
 
@@ -187,7 +190,7 @@ npm run dev
 
 4. **Open your browser**
 
-Visit `http://localhost:5173` (or the port shown in your terminal)
+Visit `http://localhost:3000` (or the port shown in your terminal)
 
 ### Build for Production
 
@@ -197,14 +200,59 @@ Build the application for deployment:
 npm run build
 ```
 
-The optimized build output will be in the `dist` directory.
+The optimized build output will be in the `.next` directory.
 
-### Preview Production Build
+### Start Production Server
 
-Preview the production build locally:
+Start the production server locally:
 
 ```bash
-npm run preview
+npm start
+```
+
+---
+
+## Deployment
+
+### Vercel (Recommended)
+
+The easiest way to deploy GeoForge is to use [Vercel](https://vercel.com):
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/zyfgisrs/GeoForge)
+
+### Self-Hosted
+
+For self-hosted deployments:
+
+```bash
+# Build the application
+npm run build
+
+# Start with Node.js
+npm start
+
+# Or use PM2 for process management
+pm2 start npm --name "geoforge" -- start
+```
+
+### Docker
+
+```dockerfile
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM node:18-alpine AS runner
+WORKDIR /app
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
+
+EXPOSE 3000
+CMD ["node", "server.js"]
 ```
 
 ---
@@ -214,16 +262,19 @@ npm run preview
 ### Basic Workflow
 
 1. **Import Data**
+
    - Click the **Import** button in the header
    - Select your GeoJSON, Shapefile (ZIP), or WKT file
    - Choose to replace or append existing data
 
 2. **Edit Geometry**
+
    - Use drawing tools on the map to create new features
    - Select existing features to edit their geometry
    - Modify properties in the Table view
 
 3. **Analyze Data**
+
    - Open the Analysis panel
    - Select a tool (e.g., Buffer, Union, Intersect)
    - Configure parameters and run the analysis
@@ -247,12 +298,14 @@ npm run preview
 ## Roadmap
 
 ### Current Focus (Q1 2026)
+
 - [ ] Add layer management with visibility toggles
 - [ ] Implement attribute table sorting and filtering
 - [ ] Add more coordinate system projections
 - [ ] Improve mobile responsiveness
 
 ### Future Plans
+
 - [ ] Support for additional formats (GeoPackage, TopoJSON)
 - [ ] Advanced styling rules and style templates
 - [ ] Collaborative editing features
@@ -302,8 +355,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- **OpenLayers** team for the excellent mapping library
-- **Turf.js** for powerful geospatial analysis tools
+- **Next.js** team for the excellent React framework
+- **OpenLayers** team for the powerful mapping library
+- **Turf.js** for advanced geospatial analysis tools
 - **Monaco Editor** team for the outstanding code editor
 - **shadcn/ui** for beautiful and accessible UI components
 - All contributors who helped make GeoForge better
@@ -322,44 +376,44 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 简体中文
 
-GeoForge（原 GeoJSON Tool）是一个现代化、高性能的 Web 应用程序，用于创建、编辑、分析和可视化地理空间数据。基于 React 和 OpenLayers 构建，为处理 GeoJSON、WKT 和其他空间格式提供了无缝体验。
+GeoForge（原 GeoJSON Tool）是一个现代化、高性能的 Web 应用程序，用于创建、编辑、分析和可视化地理空间数据。基于 **Next.js 15**、React 和 OpenLayers 构建，为处理 GeoJSON、WKT 和其他空间格式提供了无缝体验。
 
 ## 繁體中文
 
-GeoForge（前身為 GeoJSON Tool）是一個現代化、高效能的網頁應用程式，用於建立、編輯、分析和視覺化地理空間資料。使用 React 和 OpenLayers 建構，為處理 GeoJSON、WKT 和其他空間格式提供無縫體驗。
+GeoForge（前身為 GeoJSON Tool）是一個現代化、高效能的網頁應用程式，用於建立、編輯、分析和視覺化地理空間資料。使用 **Next.js 15**、React 和 OpenLayers 建構，為處理 GeoJSON、WKT 和其他空間格式提供無縫體驗。
 
 ## 한국어
 
-GeoForge (이전 GeoJSON Tool)는 지리 공간 데이터를 생성, 편집, 분석 및 시각화하기 위한 최신형 고성능 웹 애플리케이션입니다. React와 OpenLayers를 기반으로 구축되었으며, GeoJSON, WKT 및 기타 공간 형식 작업을 위한 원활한 경험을 제공합니다.
+GeoForge (이전 GeoJSON Tool)는 지리 공간 데이터를 생성, 편집, 분석 및 시각화하기 위한 최신형 고성능 웹 애플리케이션입니다. **Next.js 15**, React와 OpenLayers를 기반으로 구축되었으며, GeoJSON, WKT 및 기타 공간 형식 작업을 위한 원활한 경험을 제공합니다.
 
 ## 日本語
 
-GeoForge（旧 GeoJSON Tool）は、地理空間データの作成、編集、分析、可視化のための最新かつ高性能なWebアプリケーションです。ReactとOpenLayersで構築されており、GeoJSON、WKT、その他の空間フォーマットでの作業にシームレスな体験を提供します。
+GeoForge（旧 GeoJSON Tool）は、地理空間データの作成、編集、分析、可視化のための最新かつ高性能な Web アプリケーションです。**Next.js 15**、React と OpenLayers で構築されており、GeoJSON、WKT、その他の空間フォーマットでの作業にシームレスな体験を提供します。
 
 ## Français
 
-GeoForge (anciennement GeoJSON Tool) est une application web moderne et haute performance pour créer, éditer, analyser et visualiser des données géospatiales. Construit avec React et OpenLayers, il offre une expérience fluide pour travailler avec GeoJSON, WKT et d'autres formats spatiaux.
+GeoForge (anciennement GeoJSON Tool) est une application web moderne et haute performance pour créer, éditer, analyser et visualiser des données géospatiales. Construit avec **Next.js 15**, React et OpenLayers, il offre une expérience fluide pour travailler avec GeoJSON, WKT et d'autres formats spatiaux.
 
 ## Español
 
-GeoForge (anteriormente GeoJSON Tool) es una aplicación web moderna y de alto rendimiento para crear, editar, analizar y visualizar datos geoespaciales. Construido con React y OpenLayers, proporciona una experiencia perfecta para trabajar con GeoJSON, WKT y otros formatos espaciales.
+GeoForge (anteriormente GeoJSON Tool) es una aplicación web moderna y de alto rendimiento para crear, editar, analizar y visualizar datos geoespaciales. Construido con **Next.js 15**, React y OpenLayers, proporciona una experiencia perfecta para trabajar con GeoJSON, WKT y otros formatos espaciales.
 
 ## Русский
 
-GeoForge (ранее GeoJSON Tool) - это современное высокопроизводительное веб-приложение для создания, редактирования, анализа и визуализации геопространственных данных. Созданный на базе React и OpenLayers, он обеспечивает бесперебойную работу с GeoJSON, WKT и другими пространственными форматами.
+GeoForge (ранее GeoJSON Tool) - это современное высокопроизводительное веб-приложение для создания, редактирования, анализа и визуализации геопространственных данных. Созданный на базе **Next.js 15**, React и OpenLayers, он обеспечивает бесперебойную работу с GeoJSON, WKT и другими пространственными форматами.
 
 ## العربية
 
-GeoForge (سابقاً GeoJSON Tool) هو تطبيق ويب حديث وعالي الأداء لإنشاء وتحرير وتحليل وتصور البيانات الجغرافية المكانية. مبني باستخدام React و OpenLayers، فهو يوفر تجربة سلسة للعمل مع GeoJSON و WKT وغيرها من التنسيقات المكانية.
+GeoForge (سابقاً GeoJSON Tool) هو تطبيق ويب حديث وعالي الأداء لإنشاء وتحرير وتحليل وتصور البيانات الجغرافية المكانية. مبني باستخدام **Next.js 15** و React و OpenLayers، فهو يوفر تجربة سلسة للعمل مع GeoJSON و WKT وغيرها من التنسيقات المكانية.
 
 ## हिन्दी
 
-GeoForge (पूर्व में GeoJSON Tool) भौगोलिक स्थानिक डेटा बनाने, संपादित करने, विश्लेषण करने और विज़ुअलाइज़ करने के लिए एक आधुनिक, उच्च प्रदर्शन वेब एप्लिकेशन है। React और OpenLayers के साथ निर्मित, यह GeoJSON, WKT और अन्य स्थानिक प्रारूपों के साथ काम करने के लिए एक सहज अनुभव प्रदान करता है।
+GeoForge (पूर्व में GeoJSON Tool) भौगोलिक स्थानिक डेटा बनाने, संपादित करने, विश्लेषण करने और विज़ुअलाइज़ करने के लिए एक आधुनिक, उच्च प्रदर्शन वेब एप्लिकेशन है। **Next.js 15**, React और OpenLayers के साथ निर्मित, यह GeoJSON, WKT और अन्य स्थानिक प्रारूपों के साथ काम करने के लिए एक सहज अनुभव प्रदान करता है।
 
 ## Português
 
-GeoForge (anteriormente GeoJSON Tool) é um aplicativo web moderno e de alto desempenho para criar, editar, analisar e visualizar dados geoespaciais. Construído com React e OpenLayers, oferece uma experiência perfeita para trabalhar com GeoJSON, WKT e outros formatos espaciais.
+GeoForge (anteriormente GeoJSON Tool) é um aplicativo web moderno e de alto desempenho para criar, editar, analisar e visualizar dados geoespaciais. Construído com **Next.js 15**, React e OpenLayers, oferece uma experiência perfeita para trabalhar com GeoJSON, WKT e outros formatos espaciais.
 
 ## Deutsch
 
-GeoForge (ehemals GeoJSON Tool) ist eine moderne, leistungsstarke Webanwendung zum Erstellen, Bearbeiten, Analysieren und Visualisieren von Geodaten. Mit React und OpenLayers erstellt, bietet es ein nahtloses Erlebnis für die Arbeit mit GeoJSON, WKT und anderen räumlichen Formaten.
+GeoForge (ehemals GeoJSON Tool) ist eine moderne, leistungsstarke Webanwendung zum Erstellen, Bearbeiten, Analysieren und Visualisieren von Geodaten. Mit **Next.js 15**, React und OpenLayers erstellt, bietet es ein nahtloses Erlebnis für die Arbeit mit GeoJSON, WKT und anderen räumlichen Formaten.

@@ -1,4 +1,4 @@
-{
+﻿{
   "common": {
     "import": "가져오기",
     "export": "내보내기",
@@ -249,6 +249,9 @@
       "dot": "점선",
       "dashdot": "일점쇄선",
       "apply": "스타일 적용"
+    },
+    "analysis": {
+      "title": "공간 분석"
     }
   },
   "export": {
