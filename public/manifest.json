@@ -1,12 +1,14 @@
 {
-  "name": "GeoForge - Online GeoJSON, WKT Editor & Converter",
+  "name": "GeoForge - Free Online GeoJSON Editor & GIS Converter",
   "short_name": "GeoForge",
-  "description": "Free online geospatial tool. Convert GeoJSON to WKT, WKT to GeoJSON, and Shapefile to GeoJSON.",
+  "description": "Powerful free online GeoJSON editor and GIS converter. Convert between GeoJSON, WKT, Shapefile, KML formats. Visualize maps and analyze spatial data.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#18181b",
   "theme_color": "#18181b",
   "orientation": "landscape-primary",
+  "scope": "/",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/favicon.png",
@@ -24,7 +26,15 @@
       "type": "image/png"
     }
   ],
-  "categories": ["utilities", "productivity", "developer tools"],
+  "categories": ["utilities", "productivity", "developer tools", "maps"],
   "lang": "en",
-  "dir": "ltr"
+  "dir": "ltr",
+  "screenshots": [
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ]
 }

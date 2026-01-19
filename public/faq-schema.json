@@ -1,0 +1,70 @@
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is GeoForge?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "GeoForge is a free online GeoJSON editor and GIS converter that allows you to convert between GeoJSON, WKT, Shapefile, and KML formats. You can visualize maps, analyze spatial data with OpenLayers and Turf.js, and perform advanced geospatial operations in your browser."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I convert GeoJSON to WKT?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Simply paste your GeoJSON data into the editor panel, and GeoForge will automatically convert it to WKT format. You can then copy the WKT output or export it to your preferred format."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I upload Shapefile files to GeoForge?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes! GeoForge supports Shapefile upload through ZIP files containing .shp, .shx, .dbf, and .prj files. Simply use the import button to upload your Shapefile and it will be automatically converted to GeoJSON for editing and visualization."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What spatial analysis tools are available?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "GeoForge provides comprehensive spatial analysis tools including buffer analysis, hexagonal grid generation, Voronoi diagrams, union/intersect/difference operations, coordinate projection, and real-time data processing with Turf.js."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is GeoForge really free to use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, GeoForge is completely free to use with no hidden costs, registration requirements, or usage limits. All conversion and analysis features are available at no charge."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I export data to KML format?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Absolutely! GeoForge supports exporting your geospatial data to KML format for use in Google Earth and other GIS applications. You can also export to GeoJSON, WKT, and Shapefile formats."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does GeoForge support different coordinate systems?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, GeoForge supports multiple coordinate projection systems including EPSG:4326 (WGS84), Web Mercator, and other common projection systems. You can convert between different coordinate systems easily."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I create hexagonal grids in GeoForge?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "GeoForge includes a powerful hexagonal grid generator that allows you to create custom hex grids with specified cell sizes. You can generate hex grids over your data area for spatial analysis and visualization."
+      }
+    }
+  ]
+}
